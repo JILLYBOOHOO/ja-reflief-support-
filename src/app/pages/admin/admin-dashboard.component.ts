@@ -46,11 +46,15 @@ export class AdminDashboardComponent implements OnInit {
         this.impactRequestService.requests$.subscribe(r => this.allRequests = r);
     }
 
+    get recentUpdates() {
+        return this.updates.slice(0, 5); // Show last 5
+    }
+
     setWeather(state: string) {
         this.weatherService.setWeather(state as WeatherState);
     }
 
-    onSubmitUpdate() {
+    onSubmit() {
         if (this.updateForm.valid) {
             this.updateService.addUpdate(this.updateForm.value);
             this.updateForm.reset({ source: 'ODPEM', status: 'info' });

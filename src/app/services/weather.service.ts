@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export type WeatherState = 'sunny' | 'rainy' | 'stormy' | 'thunder';
+export type WeatherState = 'sunny' | 'cloudy' | 'windy' | 'rainy_heavy' | 'thunderstorm' | 'lightning' | 'flood' | 'landslide';
 
 @Injectable({
     providedIn: 'root'
