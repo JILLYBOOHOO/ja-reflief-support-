@@ -1,0 +1,17 @@
+<div class="alert-overlay" *ngIf="alert" (click)="close()">
+    <div class="alert-card" (click)="$event.stopPropagation()">
+        <div class="alert-status-bar" [ngClass]="alert.type"></div>
+        <div class="alert-body">
+            <div class="alert-icon" [ngClass]="alert.type">
+                <span class="material-symbols-outlined" style="font-size: 32px">
+                    {{ alert.type === 'success' ? 'check_circle' : 
+                       alert.type === 'error' ? 'error' : 
+                       alert.type === 'warning' ? 'warning' : 'info' }}
+                </span>
+            </div>
+            <h3 class="alert-title">{{ alert.title }}</h3>
+            <p class="alert-message">{{ alert.message }}</p>
+            <button class="alert-btn" (click)="close()">{{ alert.btnText || 'Got it' }}</button>
+        </div>
+    </div>
+</div>

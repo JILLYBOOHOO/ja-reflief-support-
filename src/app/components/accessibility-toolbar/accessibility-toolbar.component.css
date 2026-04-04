@@ -1,0 +1,99 @@
+.accessibility-bar {
+  position: relative;
+  width: 100%;
+  background: #000;
+  color: #fff;
+  padding: 8px 0;
+  border-bottom: 3px solid #FED100;
+  z-index: 90;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.accessibility-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-group button {
+  background: #333;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-group button.active {
+  background: #FED100;
+  color: #000;
+  border-color: #FED100;
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background: #444;
+}
+
+.voice-nav-indicator {
+  background: transparent;
+  border: 2px solid #555;
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 40px;
+  font-size: 0.8rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.voice-nav-indicator.is-active {
+  background: #009B3A;
+  border-color: #009B3A;
+  animation: breathe 2s infinite ease-in-out;
+}
+
+.material-symbols-outlined {
+  font-size: 1.2rem;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+@media (max-width: 768px) {
+    .container {
+        justify-content: center;
+    }
+    .label {
+        display: none;
+    }
+}

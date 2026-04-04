@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ImpactRequestService, ImpactRequest, RequestItem } from '../../services/impact-request.service';
+import { SpeechService } from '../../services/speech.service';
 
 declare var L: any;
 
@@ -13,9 +14,10 @@ export class DonateComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedPaymentMethod: string = 'paypal';
   showSuccessModal: boolean = false;
   alertMessage: string = '';
-  donationAmount: number = 1000;
+  donationAmount: number = 15000;
   pledgedItems: string[] = [];
   loading: boolean = false;
+  showHazardModal: boolean = false;
 
   donorName: string = '';
   donorPhone: string = '';
@@ -152,12 +154,42 @@ export class DonateComponent implements OnInit, AfterViewInit, OnDestroy {
     { id: 'paypal', name: 'PayPal & Cards', icon: '🅿️' }
   ];
 
-  constructor(private impactRequestService: ImpactRequestService) { }
+  constructor(
+    private impactRequestService: ImpactRequestService,
+    private speechService: SpeechService
+  ) { }
+
+  activeVoiceField: string = '';
+
+  listenToField(fieldName: string): void {
+    this.activeVoiceField = fieldName;
+    this.speechService.speak('Listening for ' + fieldName);
+    this.speechService.startFieldInput();
+  }
+
+  speakField(label: string, instruction: string = ''): void {
+      this.speechService.speak(`${label}. ${instruction}`);
+  }
 
   ngOnInit() {
     this.impactRequestService.requests$.subscribe(requests => {
       this.allRequests = requests;
       if (this.map) this.updateMapMarkers();
+    });
+
+    // Subscribe to voice results
+    this.speechService.fieldResult$.subscribe((text: string) => {
+      if (this.activeVoiceField) {
+        if (this.activeVoiceField === 'donationAmount') {
+          const num = parseInt(text.replace(/[^0-9]/g, ''));
+          if (!isNaN(num)) this.donationAmount = num;
+        } else {
+          const formatted = text.charAt(0).toUpperCase() + text.slice(1);
+          (this as any)[this.activeVoiceField] = formatted;
+        }
+        this.activeVoiceField = '';
+        this.speechService.speak('Updated field');
+      }
     });
   }
 
@@ -223,25 +255,34 @@ export class DonateComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   validateForm(): boolean {
-    const errEl = document.getElementById('form-errors');
+    const errEl = document.getElementById(this.donationType === 'in-kind' ? 'form-errors-in-kind' : 'form-errors');
+    
     if (!this.donorName || !this.donorName.trim()) {
       const msg = 'Please enter your Full Name.';
       if (errEl) errEl.textContent = msg;
       this.showAlert(msg);
       return false;
     }
-    if (!this.donorPhone || !this.donorPhone.trim()) {
-      const msg = 'Please enter your Phone Number.';
+
+    // Validation: Only one of Phone or Email is required, not both.
+    const hasPhone = this.donorPhone && this.donorPhone.trim();
+    const hasEmail = this.donorEmail && this.donorEmail.trim() && this.donorEmail.includes('@');
+
+    if (!hasPhone && !hasEmail) {
+      const msg = 'Please provide either a Phone Number or a valid Email Address.';
       if (errEl) errEl.textContent = msg;
       this.showAlert(msg);
       return false;
     }
-    if (!this.donorEmail || !this.donorEmail.trim() || !this.donorEmail.includes('@')) {
-      const msg = 'Please enter a valid Email Address.';
+
+    // For In-Kind, Address (Center) is required
+    if (this.donationType === 'in-kind' && !this.selectedCenter) {
+      const msg = 'Please select a Drop-Off Center for your donation.';
       if (errEl) errEl.textContent = msg;
       this.showAlert(msg);
       return false;
     }
+
     if (errEl) errEl.textContent = '';
     return true;
   }
@@ -356,7 +397,7 @@ export class DonateComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loading = false;
     this.showSuccessModal = false;
     this.alertMessage = '';
-    this.donationAmount = 25;
+    this.donationAmount = 15000;
     this.pledgedItems = [];
   }
 }

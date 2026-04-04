@@ -5,6 +5,7 @@ import { UpdateService, AlertUpdate } from '../../services/update.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { ImpactRequestService, ImpactRequest, RequestItem } from '../../services/impact-request.service';
+import { HazardService, HazardReport } from '../../services/hazard.service';
 
 @Component({
     selector: 'app-admin-dashboard',
@@ -17,6 +18,7 @@ export class AdminDashboardComponent implements OnInit {
     currentWeather: WeatherState = 'sunny';
     updates: AlertUpdate[] = [];
     allRequests: ImpactRequest[] = [];
+    hazardReports: HazardReport[] = [];
     isEditModalOpen = false;
     editingUpdate: AlertUpdate | null = null;
 
@@ -26,6 +28,7 @@ export class AdminDashboardComponent implements OnInit {
         private updateService: UpdateService,
         private authService: AuthService,
         private impactRequestService: ImpactRequestService,
+        private hazardService: HazardService,
         private router: Router
     ) {
         this.updateForm = this.fb.group({
@@ -55,6 +58,19 @@ export class AdminDashboardComponent implements OnInit {
         this.weatherService.weather$.subscribe(w => this.currentWeather = w);
         this.updateService.updates$.subscribe(u => this.updates = u);
         this.impactRequestService.requests$.subscribe(r => this.allRequests = r);
+        this.fetchHazardReports();
+    }
+
+    fetchHazardReports() {
+        this.hazardService.getAllReports().subscribe(reports => {
+            this.hazardReports = reports;
+        });
+    }
+
+    updateHazardStatus(id: number, status: string) {
+        this.hazardService.updateStatus(id, status).subscribe(() => {
+            this.fetchHazardReports();
+        });
     }
 
     get recentUpdates() {

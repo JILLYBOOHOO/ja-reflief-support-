@@ -240,6 +240,56 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Recent Hazard Reports -->
+            <div class="bg-white p-8 rounded-[2rem] border border-[#becabf]/30 shadow-sm space-y-6 mt-8">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-red-600 text-2xl">report_problem</span>
+                        <h3 class="text-xl font-bold text-[#191c1e] tracking-tight font-[Georgia,serif]">Hazard & Danger Zone Reports</h3>
+                    </div>
+                </div>
+                <div class="divide-y divide-[#becabf]/15 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                    <div *ngFor="let report of hazardReports" class="py-6 space-y-4">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex items-start gap-4 min-w-0">
+                                <div class="w-12 h-12 shrink-0 rounded-2xl bg-red-50 flex items-center justify-center text-red-600 border border-red-100">
+                                    <span class="material-symbols-outlined text-2xl">warning</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-xs font-black uppercase tracking-widest text-red-600 font-[Lexend,sans-serif]">{{ report.dangerType }}</span>
+                                        <span class="text-[10px] text-[#3e4941] font-bold opacity-60">• {{ report.createdAt | date:'short' }}</span>
+                                    </div>
+                                    <p class="text-base font-black text-[#191c1e] truncate">{{ report.location }}</p>
+                                    <p class="text-sm text-[#3e4941] font-medium leading-relaxed mt-2 italic px-4 py-2 bg-slate-50 border-l-4 border-red-200">"{{ report.description }}"</p>
+                                    <p class="text-[10px] font-black uppercase tracking-tighter text-slate-400 mt-2">Reported by: {{ report.reporterName }}</p>
+                                    
+                                    <div class="flex gap-3 mt-4" *ngIf="report.mediaLink || report.mediaPath">
+                                        <a *ngIf="report.mediaLink" [href]="report.mediaLink" target="_blank" class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-600 hover:outline rounded-lg px-2 py-1 outline-1">
+                                            <span class="material-symbols-outlined text-sm">link</span> External Media
+                                        </a>
+                                        <span *ngIf="report.mediaPath" class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#005c37] bg-green-50 px-2 py-1 rounded-lg">
+                                            <span class="material-symbols-outlined text-sm">image</span> Photos Attached
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col gap-2 shrink-0">
+                                <button *ngIf="report.status === 'Pending'" (click)="updateHazardStatus(report.id!, 'Approved')" 
+                                    class="bg-[#96f6bd] text-[#005231] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#005c37] hover:text-white transition-all shadow-sm">
+                                    Verify Report
+                                </button>
+                                <button *ngIf="report.status !== 'Resolved'" (click)="updateHazardStatus(report.id!, 'Resolved')" 
+                                    class="border border-[#becabf]/30 text-[#3e4941] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all">
+                                    Resolve
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 

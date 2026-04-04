@@ -1,11 +1,16 @@
-<app-header *ngIf="!isDashboard"></app-header>
+<app-header></app-header>
 
-<main id="main" [class.p-0]="isDashboard">
-  <app-breadcrumb *ngIf="!isDashboard"></app-breadcrumb>
-  <router-outlet></router-outlet>
+<main id="main" [class.font-size-large]="currentFontSize === 'large'" [class.font-size-huge]="currentFontSize === 'huge'">
+  <div class="page-content-wrapper">
+    <div class="breadcrumb-container">
+      <app-breadcrumb></app-breadcrumb>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
 </main>
 
-<app-footer *ngIf="!isDashboard"></app-footer>
+<app-footer></app-footer>
+<app-ai-chatbot></app-ai-chatbot>
 
 <!-- Cookie Consent Banner -->
 <div class="cookie-banner" *ngIf="showCookieBanner">
@@ -14,3 +19,5 @@
     <button class="cookie-btn" (click)="acceptCookies()">Accept & Continue</button>
   </div>
 </div>
+
+<app-alert></app-alert>

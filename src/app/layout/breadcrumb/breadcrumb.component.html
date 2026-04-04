@@ -1,13 +1,33 @@
-<nav class="breadcrumb-nav" aria-label="Breadcrumb">
-    <ol class="breadcrumb-list">
-        <li class="breadcrumb-item">
-            <a routerLink="/" aria-label="Go to Home">Home</a>
-             <span class="separator" aria-hidden="true">/</span>
-        </li>
-        <li *ngFor="let bc of breadcrumbs; let last = last" class="breadcrumb-item" [class.active]="last">
-            <a *ngIf="!last" [routerLink]="bc.url" [attr.aria-label]="'Go to ' + bc.label">{{ bc.label }}</a>
-            <span *ngIf="last" [attr.aria-current]="'page'">{{ bc.label }}</span>
-            <span *ngIf="!last" class="separator" aria-hidden="true">/</span>
-        </li>
-    </ol>
+<nav class="breadcrumb-nav" aria-label="Breadcrumb/Accessibility Tools">
+    <div class="breadcrumb-flex-container">
+        <ol class="breadcrumb-list">
+            <li class="breadcrumb-item">
+                <a routerLink="/" aria-label="Go to Home">Home</a>
+                 <span class="separator" aria-hidden="true">/</span>
+            </li>
+            <li *ngFor="let bc of breadcrumbs; let last = last" class="breadcrumb-item" [class.active]="last">
+                <a *ngIf="!last" [routerLink]="bc.url" [attr.aria-label]="'Go to ' + bc.label">{{ bc.label }}</a>
+                <span *ngIf="last" [attr.aria-current]="'page'">{{ bc.label }}</span>
+                <span *ngIf="!last" class="separator" aria-hidden="true">/</span>
+            </li>
+        </ol>
+
+        <div class="accessibility-integrated-tools">
+            <span class="label">ACCESSIBILITY:</span>
+            <div class="btn-group">
+                <button (click)="setSize('normal')" [class.active]="currentSize === 'normal'" title="Normal Font Size">A</button>
+                <button (click)="setSize('large')" [class.active]="currentSize === 'large'" title="Large Font Size">A+</button>
+                <button (click)="setSize('huge')" [class.active]="currentSize === 'huge'" title="Extra Large Font Size">A++</button>
+            </div>
+            <div class="divider"></div>
+            <button class="voice-btn" [class.is-active]="(accessibilityService.isAudioEnabled$ | async)" (click)="toggleAudio()" title="Toggle Voice Guide">
+                <span class="material-symbols-outlined">{{ (accessibilityService.isAudioEnabled$ | async) ? 'volume_up' : 'volume_off' }}</span>
+                Guide
+            </button>
+            <button class="voice-btn" [class.is-active]="(speechService.isListening$ | async)" (click)="toggleVoice()" title="Toggle Voice Navigation">
+                <span class="material-symbols-outlined">{{ (speechService.isListening$ | async) ? 'mic' : 'mic_off' }}</span>
+                Nav
+            </button>
+        </div>
+    </div>
 </nav>

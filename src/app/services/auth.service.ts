@@ -8,6 +8,15 @@ export interface User {
   idNumber: string;
   name: string;
   role: 'survivor' | 'admin' | 'agent';
+  weight?: string;
+  emergencyContact?: string;
+  bloodType?: string;
+  currentMedications?: string;
+  medicalConditions?: string;
+  allergies?: string;
+  preferredDoctorName?: string;
+  doctorContactNumber?: string;
+  dob?: string;
 }
 
 

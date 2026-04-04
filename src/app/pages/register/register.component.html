@@ -13,16 +13,26 @@
 
     <div class="form-group">
         <label for="fullName">Full Name *</label>
-        <input id="fullName" type="text" formControlName="fullName" autocomplete="name"
-            placeholder="Enter your full name" aria-required="true" aria-label="Enter your full legal name"
-            (focus)="speakField('Full Name', 'Please enter your complete legal name as it appears on your ID.')" />
+        <div class="voice-input-wrapper">
+            <input id="fullName" type="text" formControlName="fullName" autocomplete="name"
+                placeholder="Enter your full name" aria-required="true" aria-label="Enter your full legal name"
+                (focus)="speakField('Full Name', 'Please enter your complete legal name as it appears on your ID.')" />
+            <button type="button" class="voice-mic-btn" [class.active]="activeVoiceField === 'fullName'" (click)="listenToField('fullName')" aria-label="Use voice to input full name">
+                <span class="material-symbols-outlined">{{ activeVoiceField === 'fullName' ? 'mic' : 'mic_none' }}</span>
+            </button>
+        </div>
     </div>
 
     <div class="form-group">
         <label for="phone">Contact Number *</label>
-        <input id="phone" type="tel" formControlName="contact" autocomplete="tel" placeholder="876-123-4567"
-            aria-required="true" aria-label="10-digit Jamaican contact number"
-            (focus)="speakField('Contact Number', 'Enter your 10 digit Jamaican phone number.')" />
+        <div class="voice-input-wrapper">
+            <input id="phone" type="tel" formControlName="contact" autocomplete="tel" placeholder="876-123-4567"
+                aria-required="true" aria-label="10-digit Jamaican contact number"
+                (focus)="speakField('Contact Number', 'Enter your 10 digit Jamaican phone number.')" />
+            <button type="button" class="voice-mic-btn" [class.active]="activeVoiceField === 'contact'" (click)="listenToField('contact')" aria-label="Use voice to input contact number">
+                <span class="material-symbols-outlined">{{ activeVoiceField === 'contact' ? 'mic' : 'mic_none' }}</span>
+            </button>
+        </div>
     </div>
 
     <div class="form-checkbox">
@@ -35,7 +45,7 @@
     </div>
 
     <div *ngIf="!survivorForm.get('provisional')?.value">
-        <div class="form-group">
+        <div class="form-group" id="idType_group">
             <label for="idType">ID Type *</label>
             <select id="idType" formControlName="idType"
                 (focus)="speakField('ID Type', 'Select the type of ID you are providing.')">
@@ -51,12 +61,15 @@
             <label for="idNumber">ID Number *</label>
             <input id="idNumber" type="text" formControlName="idNumber" placeholder="Enter ID Number"
                 (focus)="speakField('ID Number', 'Enter the number exactly as it appears on your document.')" />
+            <div *ngIf="survivorForm.get('idNumber')?.invalid && survivorForm.get('idNumber')?.touched" class="field-error-msg">
+                Please enter a valid ID Number.
+            </div>
         </div>
 
 
     </div>
 
-    <div class="form-group">
+    <div class="form-group" id="parish_group">
         <label for="parish">Parish *</label>
         <select id="parish" formControlName="parish"
             (focus)="speakField('Parish', 'Select the parish where you currently reside.')">
@@ -67,8 +80,13 @@
 
     <div class="form-group">
         <label for="address">Address *</label>
-        <input id="address" type="text" formControlName="address" placeholder="Street, Community, City"
-            (focus)="speakField('Address', 'Enter your current physical address or temporary location.')" />
+        <div class="voice-input-wrapper">
+            <input id="address" type="text" formControlName="address" placeholder="Street, Community, City"
+                (focus)="speakField('Address', 'Enter your current physical address or temporary location.')" />
+            <button type="button" class="voice-mic-btn" [class.active]="activeVoiceField === 'address'" (click)="listenToField('address')" aria-label="Use voice to input address">
+                <span class="material-symbols-outlined">{{ activeVoiceField === 'address' ? 'mic' : 'mic_none' }}</span>
+            </button>
+        </div>
     </div>
 
     <div class="form-group">
@@ -77,9 +95,9 @@
             (focus)="speakField('Date of Birth', 'Select your date of birth from the calendar.')" />
     </div>
 
-    <fieldset class="form-group">
+    <fieldset class="form-group" id="damageLevel">
         <legend>Damage Level *</legend>
-        <div class="radio-group" role="radiogroup">
+        <div class="radio-group" role="radiogroup" aria-labelledby="damageLevelLabel">
             <label (focusin)="speakField('Low Damage', 'Select this if the damage is minor.')">
                 <input type="radio" value="Low" formControlName="damageLevel" /> Low
             </label>
@@ -93,10 +111,99 @@
         </div>
     </fieldset>
 
+    <!-- Emergency Medical Info (Optional) -->
+    <div class="mt-8 mb-4 border-t pt-8 border-emerald-100">
+        <h3 class="text-xl font-black text-emerald-900 mb-4 flex items-center gap-2 font-headline uppercase tracking-tight">
+            <span class="material-symbols-outlined text-emerald-600">medical_services</span>
+            Emergency Medical Information <span class="text-xs font-normal opacity-60 normal-case">(Optional)</span>
+        </h3>
+        <p class="text-xs text-emerald-700/60 mb-6 italic">This information will be displayed on your digital emergency card for use by first responders.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+                <label for="bloodType">Blood Type</label>
+                <select id="bloodType" formControlName="bloodType" (focus)="speakField('Blood Type')">
+                    <option value="">Select Blood Type</option>
+                    <option>A+</option><option>A-</option>
+                    <option>B+</option><option>B-</option>
+                    <option>AB+</option><option>AB-</option>
+                    <option>O+</option><option>O-</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="weight">Weight (lbs)</label>
+                <input id="weight" type="text" formControlName="weight" placeholder="e.g. 185" (focus)="speakField('Weight')"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="emergencyContact">Emergency Contact (Name & Phone)</label>
+            <input id="emergencyContact" type="text" formControlName="emergencyContact" placeholder="e.g. Althea Campbell (876-555-0123)" (focus)="speakField('Emergency Contact')"/>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+                <label for="medicalConditions">Medical Conditions</label>
+                <div class="voice-input-wrapper">
+                    <textarea id="medicalConditions" formControlName="medicalConditions" placeholder="e.g. Asthma, Diabetes" rows="2" (focus)="speakField('Medical Conditions')"></textarea>
+                    <button type="button" class="voice-mic-btn" [class.active]="activeVoiceField === 'medicalConditions'" (click)="listenToField('medicalConditions')" aria-label="Use voice to input medical conditions">
+                        <span class="material-symbols-outlined">{{ activeVoiceField === 'medicalConditions' ? 'mic' : 'mic_none' }}</span>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="allergies">Allergies</label>
+                <div class="voice-input-wrapper">
+                    <textarea id="allergies" formControlName="allergies" placeholder="e.g. Penicillin, Peanuts" rows="2" (focus)="speakField('Allergies')"></textarea>
+                    <button type="button" class="voice-mic-btn" [class.active]="activeVoiceField === 'allergies'" (click)="listenToField('allergies')" aria-label="Use voice to input allergies">
+                        <span class="material-symbols-outlined">{{ activeVoiceField === 'allergies' ? 'mic' : 'mic_none' }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="currentMedications">Current Medications</label>
+            <textarea id="currentMedications" formControlName="currentMedications" placeholder="e.g. Inhaler, Insulin" rows="2" (focus)="speakField('Current Medications')"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+                <label for="preferredDoctorName">Preferred Doctor Name</label>
+                <input id="preferredDoctorName" type="text" formControlName="preferredDoctorName" placeholder="Dr. Andre Richards" (focus)="speakField('Doctor Name')"/>
+            </div>
+            <div class="form-group">
+                <label for="doctorContactNumber">Doctor Contact Number</label>
+                <input id="doctorContactNumber" type="tel" formControlName="doctorContactNumber" placeholder="876-555-9876" (focus)="speakField('Doctor Contact')"/>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medical Consent Checkbox -->
+    <div class="form-checkbox mt-8 mb-4 bg-emerald-50 border-emerald-200">
+        <input type="checkbox" id="medicalConsent" formControlName="medicalConsent"
+            aria-label="Consent to share your emergency medical information with authorized medical personnel"
+            (focus)="speakField('Medical Consent', 'Check this box to allow authorized medical personnel to access your emergency medical card information safely.')" />
+        <label for="medicalConsent" class="text-emerald-900 font-bold">
+            I consent to sharing my emergency medical information with authorized medical personnel in case of
+            emergency.
+        </label>
+    </div>
+
     <div class="form-group">
         <label for="password">Create Password *</label>
-        <input id="password" type="password" formControlName="password" placeholder="Min 6 characters"
-            (focus)="speakField('Password', 'Create a password to access your dashboard later. Minimum 6 characters.')" />
+        <p class="field-hint">Min 6 chars. Avoid simple sequences like 1234 or aaaa.</p>
+        <input id="password" type="password" formControlName="password" placeholder="••••••••"
+            (focus)="speakField('Password', 'Create a password with at least 6 characters. Avoid common numbers like 1-2-3-4.')" />
+        <div *ngIf="survivorForm.get('password')?.errors?.['required'] && survivorForm.get('password')?.touched" class="field-error-msg">
+            Password is required.
+        </div>
+        <div *ngIf="survivorForm.get('password')?.errors?.['minlength'] && survivorForm.get('password')?.touched" class="field-error-msg">
+            Minimum 6 characters required.
+        </div>
+        <div *ngIf="survivorForm.get('password')?.errors?.['simplePassword'] && survivorForm.get('password')?.touched" class="field-error-msg">
+            Password is too simple. Do not use common sequences or repetitive characters.
+        </div>
     </div>
 
     <div class="form-group">

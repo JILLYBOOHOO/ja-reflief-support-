@@ -5,7 +5,7 @@ async function init() {
   const connection = await mysql.createConnection({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
+    password: process.env.DB_PASSWORD,
   });
 
   const dbName = process.env.DB_NAME || 'ja_relief';
@@ -26,6 +26,17 @@ async function init() {
       damageLevel VARCHAR(50),
       password VARCHAR(255) NOT NULL,
       idScanPath VARCHAR(255),
+      weight VARCHAR(20),
+      emergencyContact VARCHAR(255),
+      bloodType VARCHAR(20),
+      currentMedications TEXT,
+      medicalConditions TEXT,
+      allergies TEXT,
+      preferredDoctorName VARCHAR(255),
+      doctorContactNumber VARCHAR(50),
+      medicalConsent BOOLEAN DEFAULT FALSE,
+      cardNumber VARCHAR(50),
+      balance DECIMAL(15, 2) DEFAULT 0,
       createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
@@ -78,6 +89,20 @@ async function init() {
       donationDate DATE,
       createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (donorId) REFERENCES donors(id) ON DELETE SET NULL
+    )
+  `);
+
+  await connection.query(`
+    CREATE TABLE IF NOT EXISTS hazard_reports (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      reporterName VARCHAR(255) DEFAULT 'Anonymous',
+      dangerType VARCHAR(100) NOT NULL,
+      description TEXT,
+      location TEXT NOT NULL,
+      mediaPath VARCHAR(255),
+      mediaLink TEXT,
+      status VARCHAR(20) DEFAULT 'Pending',
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
 

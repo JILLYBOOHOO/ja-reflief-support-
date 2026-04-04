@@ -51,8 +51,22 @@ router.post('/register',
     try {
       let {
         fullName, contact, idType, idNumber, provisional,
-        parish, address, dob, damageLevel, password
+        parish, address, dob, damageLevel, password,
+        weight, emergencyContact, bloodType, currentMedications, 
+        medicalConditions, allergies, preferredDoctorName, doctorContactNumber
       } = req.body;
+
+      // Password complexity check
+      const commonSequences = ['123', '234', '345', '456', '567', '678', '789', 'abc', 'password'];
+      const isSimplePwd = commonSequences.some(seq => password.toLowerCase().includes(seq)) || /(.)\1\1/.test(password);
+      if (isSimplePwd) {
+          return res.status(400).json({ error: 'Password is too common or contains repetitive characters.' });
+      }
+
+      const isSimpleId = commonSequences.some(seq => idNumber && idNumber.toLowerCase().includes(seq)) || (idNumber && /(.)\1\1/.test(idNumber));
+      if (isSimpleId) {
+          return res.status(400).json({ error: 'ID Number cannot be a simple sequence like 1234 or aaaa.' });
+      }
 
       // Handle FormData converting booleans to strings
       const isProvisional = provisional === 'true' || provisional === true || provisional === 1 || provisional === '1';
@@ -72,19 +86,29 @@ router.post('/register',
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
+      const { generateCardNumber, getInitialBalance } = require('../utils/card.util');
+      const cardNumber = generateCardNumber();
+      const balance = getInitialBalance(damageLevel);
+
       const sql = `
         INSERT INTO survivors
-        (fullName, contact, idType, idNumber, provisional, parish, address, dob, damageLevel, password, idScanPath)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (fullName, contact, idType, idNumber, provisional, parish, address, dob, damageLevel, password, idScanPath, 
+         weight, emergencyContact, bloodType, currentMedications, medicalConditions, allergies, preferredDoctorName, doctorContactNumber, cardNumber, balance)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       const [result] = await db.query(sql, [
         fullName, contact, idType, idNumber, isProvisional, 
-        parish, address, dob, damageLevel, hashedPassword, idScanPath
+        parish, address, dob, damageLevel, hashedPassword, idScanPath,
+        weight, emergencyContact, bloodType, currentMedications, medicalConditions, allergies, preferredDoctorName, doctorContactNumber,
+        cardNumber, balance
       ]);
 
       res.status(201).json({ message: 'Survivor registered successfully', survivorId: result.insertId });
     } catch (err) {
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(400).json({ message: 'Registration failed', error: 'This ID Number is already registered.' });
+      }
       next(err); // pass to global error handler
     }
   }
@@ -151,7 +175,16 @@ router.post('/login', [
         id: survivor.id,
         name: survivor.fullName,
         idNumber: survivor.idNumber,
-        role: 'survivor'
+        role: 'survivor',
+        dob: survivor.dob,
+        weight: survivor.weight,
+        emergencyContact: survivor.emergencyContact,
+        bloodType: survivor.bloodType,
+        currentMedications: survivor.currentMedications,
+        medicalConditions: survivor.medicalConditions,
+        allergies: survivor.allergies,
+        preferredDoctorName: survivor.preferredDoctorName,
+        doctorContactNumber: survivor.doctorContactNumber
       }
     });
 

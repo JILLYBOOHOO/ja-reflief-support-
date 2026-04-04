@@ -25,7 +25,7 @@ const routes: Routes = [
     { path: 'register', component: RegisterComponent, data: { breadcrumb: 'Register' } },
     { path: 'login', component: LoginComponent, data: { breadcrumb: 'Login' } },
     { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { breadcrumb: 'Dashboard' } },
-    { path: 'info', component: InfoComponent, canActivate: [AuthGuard], data: { breadcrumb: 'Information' } },
+    { path: 'information', component: InfoComponent, data: { breadcrumb: 'Information' } },
     { path: 'sitemap', component: SitemapComponent, data: { breadcrumb: 'Sitemap' } },
     { path: 'privacy', component: PrivacyComponent, data: { breadcrumb: 'Privacy Statement' } },
     { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuard], data: { roles: ['admin'], breadcrumb: 'Admin Portal' } }

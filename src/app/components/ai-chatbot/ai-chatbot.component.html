@@ -1,0 +1,54 @@
+<div class="chatbot-widget" [class.open]="isOpen">
+  <!-- Avatar / Trigger -->
+  <button class="avatar-trigger" (click)="toggleOpen()" [class.is-talking]="isTalking" title="Chat with JA-Z Relief Assistant">
+    <div class="avatar-glow"></div>
+    <div class="avatar-img-wrapper">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Flag_of_Jamaica.svg" alt="JA-Z Assistant" class="ja-avatar" />
+    </div>
+    <div class="notification-dot" *ngIf="hasNewMessage"></div>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" *ngIf="isOpen">
+    <div class="chat-header">
+      <div class="header-info">
+        <span class="status-dot"></span>
+        <h3>JA-Z Relief Assistant</h3>
+      </div>
+      <div class="header-actions">
+        <button *ngIf="isTourActive" class="skip-btn" (click)="skipTour()">Skip Tour</button>
+        <button class="close-btn" (click)="toggleOpen()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="messages-container" #scrollContainer>
+      <div *ngFor="let msg of messages" class="message" [class.bot]="msg.sender === 'bot'" [class.user]="msg.sender === 'user'">
+        <div class="msg-bubble">
+          {{ msg.text }}
+        </div>
+      </div>
+      <div class="message bot typing" *ngIf="isTyping">
+        <div class="msg-bubble"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+
+    <div class="tour-controls" *ngIf="isTourActive">
+        <button (click)="nextTourStep()" class="next-btn">
+            {{ currentTourStep < tourSteps.length - 1 ? 'Next Tip' : 'Finish Tour' }}
+            <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+    </div>
+
+    <div class="chat-footer" *ngIf="!isTourActive">
+      <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="How can I help you? Ask JA-Z..." />
+      <button class="voice-btn" (click)="startVoiceChat()" [class.active]="isListening" title="Voice Input">
+         <span class="material-symbols-outlined">{{ isListening ? 'mic' : 'mic_none' }}</span>
+      </button>
+      <button class="send-btn" (click)="sendMessage()">
+        <span class="material-symbols-outlined">send</span>
+      </button>
+    </div>
+  </div>
+</div>

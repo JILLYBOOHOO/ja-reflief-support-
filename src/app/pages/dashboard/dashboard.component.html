@@ -1,131 +1,229 @@
-<!-- Fixed TopNavBar -->
-<nav class="fixed top-0 w-full z-50 header-gradient shadow-lg">
-    <div class="flex justify-between items-center w-full px-8 py-3 mx-auto">
-        <div class="text-2xl font-bold tracking-tight text-white font-['Manrope']">
-            Welcome to JA RELIEF
-        </div>
-        <div class="hidden md:flex items-center space-x-3 font-['Manrope']">
-            <a class="flex items-center gap-2 px-4 py-2 bg-[#f9d423] text-black font-bold rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-none transition-all"
-                routerLink="/">
-                <span class="text-sm">🇯🇲</span> Home
-            </a>
-            <a class="flex items-center gap-2 px-4 py-2 bg-[#008731] text-white font-bold rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-none transition-all"
-                routerLink="/donate">
-                <span class="text-sm">🇯🇲</span> Donate
-            </a>
-            <a class="flex items-center gap-2 px-4 py-2 bg-[#f9d423] text-black font-bold rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-none transition-all"
-                routerLink="/dashboard">
-                <span class="text-sm">🇯🇲</span> Dashboard
-            </a>
-            <a (click)="logout()"
-                class="flex items-center gap-2 px-4 py-2 bg-[#f9d423] text-black font-bold rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-none transition-all cursor-pointer">
-                <span class="text-sm">🇯🇲</span> Logout
-            </a>
-            <div class="flex items-center gap-2 ml-2">
-                <button
-                    class="w-10 h-10 rounded-full bg-[#004d1a] border border-white/20 flex items-center justify-center text-white">
-                    <span class="material-symbols-outlined text-sm">mic</span>
-                </button>
-                <button
-                    class="w-10 h-10 rounded-full bg-[#004d1a] border border-white/20 flex items-center justify-center text-white">
-                    <span class="material-symbols-outlined text-sm">dark_mode</span>
-                </button>
+
+<main class="py-8 px-8 max-w-[calc(100%-22rem)] mr-auto">
+    <!-- Public Safety Warning / Report Button -->
+    <div class="mb-8 p-4 bg-red-50 border-2 border-red-100 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-red-600 text-3xl animate-pulse">report_problem</span>
+            <div>
+                <h3 class="font-black text-red-900 uppercase tracking-tighter text-sm">Have you spotted a dangerous area?</h3>
+                <p class="text-xs text-red-700/70 font-bold">Help your community by reporting landslides, flooding, or blocked roads.</p>
             </div>
         </div>
+        <button (click)="showHazardModal = true" class="bg-red-600 text-white px-6 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-black transition-all shadow-md">
+            Report Danger Zone
+        </button>
     </div>
-</nav>
+    <!-- ID Cards Section -->
+    <div class="flex flex-col xl:flex-row items-center xl:items-start justify-center gap-12 mb-16">
+        <!-- Virtual ID Card Section -->
+        <div class="id-card-perspective flex flex-col items-center">
+            <!-- Virtual ID Card Container -->
+            <div id="tour-step-1" (click)="flipCard()"
+                class="relative w-full min-w-[320px] max-w-lg aspect-[1.58/1] bg-gradient-to-br from-[#0b3d1c] via-[#006b25] to-[#0b3d1c] rounded-2xl shadow-2xl p-8 text-white font-['Manrope'] overflow-hidden border border-white/10 cursor-pointer transition-transform duration-700 transform-style-3d hover:shadow-emerald-500/20"
+                [class.rotate-y-180]="isCardFlipped">
+                
+                <ng-container *ngIf="!isCardFlipped; else backSide">
+                    <!-- FRONT SIDE -->
+                    <!-- Background Decorative Circles -->
+                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/5 rounded-full"></div>
+                    <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-white/5 rounded-full"></div>
+                    <!-- Header -->
+                    <div class="flex justify-between items-start relative z-10">
+                        <div>
+                            <p class="text-[10px] uppercase tracking-[0.2em] font-bold opacity-80">JA Relief Survivor ID</p>
+                            <div
+                                class="mt-4 w-12 h-9 bg-gradient-to-br from-yellow-300 via-yellow-500 to-yellow-200 rounded-md shadow-inner border border-black/10">
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-3xl opacity-80 rotate-90">contactless</span>
+                    </div>
+                    <!-- Card Number -->
+                    <div class="mt-8 relative z-10">
+                        <p class="text-2xl tracking-[0.25em] font-medium drop-shadow-md">{{ cardNumber }}</p>
+                    </div>
+                    <!-- Balance -->
+                    <div class="mt-4 relative z-10">
+                        <p class="text-[10px] uppercase tracking-widest opacity-60">Available Balance</p>
+                        <p class="text-xl font-bold ml-1">$50,000.00 JMD</p>
+                    </div>
+                    <!-- Footer Info -->
+                    <div class="mt-auto flex justify-between items-end relative z-10">
+                        <div class="space-y-1">
+                            <p class="text-[10px] uppercase tracking-widest opacity-60 ml-0.5">Card Holder</p>
+                            <p class="text-lg font-bold">{{ currentUser?.name || 'Leon Davis' }}</p>
+                            <p class="text-xs font-medium opacity-80">ID: {{ currentUser?.idNumber || '876409321' }}</p>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <img alt="JA Flag" class="w-8 h-5 rounded-sm mb-1 opacity-80"
+                                src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Flag_of_Jamaica.svg" />
+                            <p class="text-[8px] opacity-40">Tap card to flip</p>
+                        </div>
+                    </div>
+                </ng-container>
 
-<main class="pt-24 pb-20 px-8 max-w-[calc(100%-22rem)] mr-auto">
-    <!-- Virtual ID Card Section -->
-    <div class="id-card-perspective mb-16 flex flex-col items-center">
-        <!-- Virtual ID Card Container -->
-        <div (click)="flipCard()"
-            class="relative w-full max-w-lg aspect-[1.58/1] bg-gradient-to-br from-[#0b3d1c] via-[#006b25] to-[#0b3d1c] rounded-2xl shadow-2xl p-8 text-white font-['Manrope'] overflow-hidden border border-white/10 cursor-pointer transition-transform duration-700 transform-style-3d"
-            [class.rotate-y-180]="isCardFlipped">
-            
-            <ng-container *ngIf="!isCardFlipped; else backSide">
-                <!-- FRONT SIDE -->
-                <!-- Background Decorative Circles -->
-                <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/5 rounded-full"></div>
-                <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-white/5 rounded-full"></div>
-                <!-- Header -->
-                <div class="flex justify-between items-start relative z-10">
-                    <div>
-                        <p class="text-[10px] uppercase tracking-[0.2em] font-bold opacity-80">JA Relief Survivor ID</p>
-                        <div
-                            class="mt-4 w-12 h-9 bg-gradient-to-br from-yellow-300 via-yellow-500 to-yellow-200 rounded-md shadow-inner border border-black/10">
+                <ng-template #backSide>
+                    <!-- BACK SIDE -->
+                    <div class="flex flex-col h-full relative z-10 back-unmirror">
+                        <div class="w-full h-12 bg-black/90 -mx-8 mt-2 shadow-inner"></div>
+                        <div class="mt-8 flex items-center gap-4">
+                            <div class="flex-grow h-12 bg-white/20 rounded flex items-center px-4 italic text-sm border border-white/10">
+                                Authorized Signature
+                            </div>
+                            <div class="bg-white text-black px-4 py-2 rounded-lg font-black tracking-widest text-lg shadow-lg">
+                                {{ cvvCode }}
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-white/5">
+                            <p class="text-[9px] leading-relaxed opacity-60 italic text-center px-4">
+                                Notice: This virtual card is only authorized for use at local relief-compliant MCCs, grocery stores, pharmacies, and hardware medical facilities. For assistance call 1-888-JA-RELIEF.
+                            </p>
                         </div>
                     </div>
-                    <span class="material-symbols-outlined text-3xl opacity-80 rotate-90">contactless</span>
-                </div>
-                <!-- Card Number -->
-                <div class="mt-8 relative z-10">
-                    <p class="text-2xl tracking-[0.25em] font-medium drop-shadow-md">{{ cardNumber }}</p>
-                </div>
-                <!-- Balance -->
-                <div class="mt-4 relative z-10">
-                    <p class="text-[10px] uppercase tracking-widest opacity-60">Available Balance</p>
-                    <p class="text-xl font-bold ml-1">$50,000.00 JMD</p>
-                </div>
-                <!-- Footer Info -->
-                <div class="mt-auto flex justify-between items-end relative z-10">
-                    <div class="space-y-1">
-                        <p class="text-[10px] uppercase tracking-widest opacity-60 ml-0.5">Card Holder</p>
-                        <p class="text-lg font-bold">{{ currentUser?.name || 'Leon Davis' }}</p>
-                        <p class="text-xs font-medium opacity-80">ID: {{ currentUser?.idNumber || '876409321' }}</p>
-                    </div>
-                    <div class="flex flex-col items-end">
-                        <img alt="JA Flag" class="w-8 h-5 rounded-sm mb-1 opacity-80"
-                            src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Flag_of_Jamaica.svg" />
-                        <p class="text-[8px] opacity-40">Tap card to flip</p>
-                    </div>
-                </div>
-            </ng-container>
-
-            <ng-template #backSide>
-                <!-- BACK SIDE -->
-                <div class="flex flex-col h-full relative z-10 back-unmirror">
-                    <div class="w-full h-12 bg-black/90 -mx-8 mt-2 shadow-inner"></div>
-                    <div class="mt-8 flex items-center gap-4">
-                        <div class="flex-grow h-12 bg-white/20 rounded flex items-center px-4 italic text-sm border border-white/10">
-                            Authorized Signature
-                        </div>
-                        <div class="bg-white text-black px-4 py-2 rounded-lg font-black tracking-widest text-lg shadow-lg">
-                            {{ cvvCode }}
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-6 border-t border-white/5">
-                        <p class="text-[9px] leading-relaxed opacity-60 italic text-center px-4">
-                            Notice: This virtual card is only authorized for use at local relief-compliant MCCs, grocery stores, pharmacies, and hardware medical facilities. For assistance call 1-888-JA-RELIEF.
-                        </p>
-                    </div>
-                </div>
-            </ng-template>
+                </ng-template>
+            </div>
+            <!-- Terms of Use Notice -->
+            <p class="mt-6 max-w-lg text-center text-[10px] text-on-surface-variant/70 italic px-4 uppercase tracking-widest font-bold">
+                Auth Use Only: MCCs, Pharmacies, Hardware Stores
+            </p>
         </div>
-        <!-- Terms of Use Notice -->
-        <p class="mt-6 max-w-lg text-center text-xs text-on-surface-variant/70 italic px-4">
-            Notice: Card only authorized to be used at authorized MCCs, supermarkets, medical offices, pharmacies, and
-            hardware stores.
-        </p>
+
+        <!-- Emergency Medical Card -->
+        <div id="tour-step-2" class="w-full max-w-lg">
+            <div class="bg-white rounded-[24px] shadow-2xl overflow-hidden border-2 border-slate-900/5 transition-all hover:shadow-red-500/10">
+                <!-- Header Section -->
+                <header class="bg-[#006b25] p-6 relative overflow-hidden">
+                    <!-- Abstract Texture Overlay -->
+                    <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(135deg, #000 25%, transparent 25%), linear-gradient(225deg, #000 25%, transparent 25%), linear-gradient(45deg, #000 25%, transparent 25%), linear-gradient(315deg, #000 25%, transparent 25%); background-position: 10px 0, 10px 0, 0 0, 0 0; background-size: 20px 20px; background-repeat: repeat;"></div>
+                    <div class="relative z-10 flex justify-between items-start">
+                        <div>
+                            <h1 class="text-white text-2xl font-black leading-tight tracking-tighter uppercase font-headline">
+                                {{ currentUser?.name || 'NAME NOT FOUND' }}
+                            </h1>
+                            <p class="text-[#62df74] text-[10px] font-black tracking-[0.2em] uppercase mt-1 opacity-100 font-label">
+                                MEDICAL EMERGENCY PROFILE • ID: {{ currentUser?.idNumber || 'UNASSIGNED' }}
+                            </p>
+                        </div>
+                        <div class="bg-[#ffd31a] text-[#231b00] px-4 py-2 rounded-xl flex flex-col items-center justify-center min-w-[90px] border border-black/10 shadow-sm">
+                            <span class="text-[8px] font-black uppercase font-label leading-none mb-1 opacity-70">Blood Type</span>
+                            <span class="text-lg font-black leading-none">{{ currentUser?.bloodType || 'N/A' }}</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Quick Data Row & QR -->
+                <div class="px-6 py-4 grid grid-cols-12 gap-4 border-b border-slate-100">
+                    <div class="col-span-8 flex flex-col justify-center">
+                        <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <div class="text-center">
+                                <span class="block text-[10px] font-black uppercase text-slate-400 font-label">DOB</span>
+                                <span class="text-sm font-black text-slate-800">{{ formattedDOB }}</span>
+                            </div>
+                            <div class="w-px h-6 bg-slate-200"></div>
+                            <div class="text-center">
+                                <span class="block text-[10px] font-black uppercase text-slate-400 font-label">Age</span>
+                                <span class="text-sm font-black text-slate-800">{{ age }} Yrs</span>
+                            </div>
+                            <div class="w-px h-6 bg-slate-200"></div>
+                            <div class="text-center">
+                                <span class="block text-[10px] font-black uppercase text-slate-400 font-label">Weight</span>
+                                <span class="text-sm font-black text-slate-800">{{ currentUser?.weight || '---' }} Lbs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-4 flex flex-col items-center justify-center">
+                        <div class="bg-black p-1.5 rounded-lg">
+                            <img alt="QR Code" class="w-16 h-16 grayscale brightness-125" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp8qOc60fxs5tzYNacDuBqH_W3t3ghlIV5c9cqMxD54hTAwCJUcIC4KgYWadbJeQaGKZU8tKtqSTgNnQym641N2B600bcvKS_LyNP71k-3BFhyuC56x01MK9hHgsSsKZGeW1jNuoLsWromVmJGFZAawpI0C_PzVsjQmAjpApO1Z4XRF8LoRBrWhFLpdI-CDh21hnxTDvhIaRUX8o64nyNiS0-4vCDor6Oa8baobkTA7GbEcbyIT5-uKW2sjQ0JPaAMBb8j5COhejVq"/>
+                        </div>
+                        <span class="text-[8px] font-black mt-2 text-center leading-tight text-slate-400 uppercase font-label">Scan for Profile</span>
+                    </div>
+                </div>
+
+                <!-- Health Data Body -->
+                <div class="p-6 space-y-4">
+                    <!-- Urgent Section: Allergies -->
+                    <section *ngIf="allergiesList.length > 0">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="material-symbols-outlined text-red-600 text-xl" style="font-variation-settings: 'FILL' 1;">warning</span>
+                            <h2 class="text-xs font-black uppercase font-label text-red-600 tracking-wider">Urgent: Allergies</h2>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span *ngFor="let allergy of allergiesList" class="bg-red-50 text-red-700 px-3 py-1.5 rounded-lg text-xs font-bold border border-red-100">
+                                {{ allergy }}
+                            </span>
+                        </div>
+                    </section>
+
+                    <!-- Chronic Conditions & Meds -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <section class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="material-symbols-outlined text-[#006b25] text-sm">medical_services</span>
+                                <h2 class="text-[10px] font-black uppercase font-label text-slate-500 tracking-wider">Conditions</h2>
+                            </div>
+                            <div class="space-y-1">
+                                <div *ngFor="let condition of medicalConditionsList" class="flex items-start gap-1">
+                                    <span class="text-xs font-bold text-slate-800">• {{ condition }}</span>
+                                </div>
+                                <p *ngIf="medicalConditionsList.length === 0" class="text-xs font-bold text-slate-400">None reported</p>
+                            </div>
+                        </section>
+                        <section class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="material-symbols-outlined text-[#006b25] text-sm">pill</span>
+                                <h2 class="text-[10px] font-black uppercase font-label text-slate-500 tracking-wider">Medications</h2>
+                            </div>
+                            <ul class="space-y-1">
+                                <li *ngFor="let med of medicationsList" class="text-xs font-bold text-slate-800">• {{ med }}</li>
+                                <li *ngIf="medicationsList.length === 0" class="text-xs font-bold text-slate-400">None reported</li>
+                            </ul>
+                        </section>
+                    </div>
+
+                    <!-- Contact Info Section -->
+                    <section class="space-y-3">
+                        <div class="grid grid-cols-1 gap-3">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <h3 class="text-[10px] font-black uppercase font-label text-slate-400 mb-2 tracking-wider">Emergency Contact</h3>
+                                <p class="text-sm font-black text-slate-800">{{ currentUser?.emergencyContact || 'UNSPECIFIED' }}</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <h3 class="text-[10px] font-black uppercase font-label text-slate-400 mb-2 tracking-wider">Preferred Doctor</h3>
+                                <p class="text-sm font-black text-slate-800 leading-tight">{{ currentUser?.preferredDoctorName || 'NO DOCTOR LISTED' }}</p>
+                                <div class="flex items-center gap-1 mt-2 text-[#006b25]">
+                                    <span class="material-symbols-outlined text-xs">call</span>
+                                    <span class="text-xs font-bold">{{ currentUser?.doctorContactNumber || 'N/A' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Action Buttons Footer -->
+                <footer class="bg-slate-50 p-4 grid grid-cols-3 gap-3 border-t border-slate-100">
+                    <button class="bg-[#ffd31a] text-[#231b00] py-4 rounded-xl flex flex-col items-center justify-center gap-1 hover:brightness-95 transition-all border border-black/5">
+                        <span class="material-symbols-outlined text-lg">share</span>
+                        <span class="text-[9px] font-black uppercase font-label">Share</span>
+                    </button>
+                    <button class="bg-black text-white py-4 rounded-xl flex flex-col items-center justify-center gap-1 hover:brightness-110 transition-all">
+                        <span class="material-symbols-outlined text-lg">edit</span>
+                        <span class="text-[9px] font-black uppercase font-label">Edit</span>
+                    </button>
+                    <button class="bg-[#006b25] text-white py-4 rounded-xl flex flex-col items-center justify-center gap-1 hover:brightness-110 transition-all">
+                        <span class="material-symbols-outlined text-lg">download</span>
+                        <span class="text-[9px] font-black uppercase font-label">Export</span>
+                    </button>
+                </footer>
+            </div>
+            <p class="mt-4 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest"> Verified Jamaican Health Record</p>
+        </div>
     </div>
 
     <!-- Bento Grid Supplies -->
-    <form [formGroup]="pantryForm" (ngSubmit)="submitPantryRequest()">
+    <form id="tour-step-3" [formGroup]="pantryForm" (ngSubmit)="submitPantryRequest()">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <ng-container *ngFor="let cat of categorizedPantryItems; let i = index">
-                <!-- Visual Context between categories 2 and 3 -->
-                <div *ngIf="i === 2" class="relative overflow-hidden rounded-xl h-64 lg:col-span-2 shadow-md">
-                    <img class="w-full h-full object-cover"
-                        alt="vibrant outdoor scene in Jamaica with lush tropical foliage and bright warm sunlight hitting palm leaves"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCs3ZUyPIIWwqkfQxpNN_YXRyqlHDJy5jtB0RXgkpPO86MhohgltratO1w0VoaFNrgwBCfNmFNesLw6343E1ItS6Wlp8oeBppcK0MCMA3O7cqWurTn6ZYB704mCPg6yWwLluk6X1McjtVqhmwM02kJzZxico2eOTqeyGNVJUiauV0GrqpMCOMmqWrjrey2WEn_qStzV00NccV5I-npgx1WKqfkgNWwNmc2c0M35GDjPPCS2OmGB9Hswtp5Ry2Y_xqGS32ERdXbEH8kB" />
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-emerald-950/20 to-transparent flex items-end p-8">
-                        <div class="text-white">
-                            <h3 class="font-headline text-xl font-bold">Community Support Centers</h3>
-                            <p class="text-sm opacity-90">Locations updated every 6 hours across all parishes.</p>
-                        </div>
-                    </div>
-                </div>
+                <!-- Removed palm image banner -->
+
 
                 <!-- Category Section -->
                 <section
@@ -166,13 +264,56 @@
                     class="w-full p-6 rounded-xl border border-emerald-100 bg-surface-container-low focus:ring-primary focus:border-primary text-lg min-h-[120px]"
                     placeholder="e.g. Specific medication, dietary requirements, or any other essentials not listed above..."></textarea>
             </section>
+
+            <!-- Donation Centers Section -->
+            <section class="lg:col-span-2 bg-white p-8 rounded-xl shadow-xl border-2 border-emerald-900/10">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="bg-emerald-900 text-white p-3 rounded-xl">
+                        <span class="material-symbols-outlined text-3xl">location_on</span>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black text-emerald-900 uppercase tracking-tighter">Active Donation Drop-Off Centers</h2>
+                        <p class="text-sm text-emerald-700 font-bold">Monday - Saturday: 8:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                        <span class="text-xl">📍</span>
+                        <div>
+                            <p class="font-black text-emerald-900">Kingston Warehouse</p>
+                            <p class="text-xs text-emerald-700">123 Hope Road, Kingston 6</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                        <span class="text-xl">📍</span>
+                        <div>
+                            <p class="font-black text-emerald-900">Montego Bay Center</p>
+                            <p class="text-xs text-emerald-700">Fairview Plaza Block C, MoBay</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                        <span class="text-xl">📍</span>
+                        <div>
+                            <p class="font-black text-emerald-900">Mandeville Hub</p>
+                            <p class="text-xs text-emerald-700">4 Ward Avenue, Mandeville</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                        <span class="text-xl">📍</span>
+                        <div>
+                            <p class="font-black text-emerald-900">St. Ann's Bay Point</p>
+                            <p class="text-xs text-emerald-700">Main Street (Opposite Parish Church)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </form>
 </main>
 
 <!-- SideNavBar (Request Summary) -->
-<aside
-    class="fixed right-0 top-16 h-[calc(100vh-4rem)] w-96 rounded-l-3xl bg-slate-100/95 dark:bg-slate-900/90 backdrop-blur-xl shadow-2xl flex flex-col p-8 space-y-6 border-l border-emerald-100/20">
+<aside id="tour-step-4"
+    class="fixed right-0 top-[140px] h-[calc(100vh-140px)] w-96 rounded-l-3xl bg-slate-100/95 dark:bg-slate-900/90 backdrop-blur-xl shadow-2xl flex flex-col p-8 space-y-6 border-l border-emerald-100/20 z-[40]">
     <div class="pt-4">
         <h2 class="text-2xl font-black text-emerald-900 dark:text-white font-['Work_Sans']">Request Summary</h2>
         <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400">Tracking your items</p>
@@ -210,27 +351,4 @@
     </div>
 </aside>
 
-<!-- Footer -->
-<footer class="w-full py-12 mt-auto border-t border-emerald-100/20 bg-emerald-50 dark:bg-emerald-950">
-    <div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-7xl mx-auto space-y-8 md:space-y-0">
-        <div class="flex flex-col items-center md:items-start space-y-2">
-            <div class="font-['Manrope'] font-black text-emerald-900 text-lg">JA RELIEF</div>
-            <div class="font-['Work_Sans'] text-xs tracking-wide uppercase text-emerald-700/60">
-                © 2024 JA RELIEF. Resilient Together.
-            </div>
-        </div>
-        <div class="flex space-x-12 font-['Work_Sans'] text-xs tracking-wide uppercase">
-            <a class="text-emerald-700/60 hover:text-yellow-600 transition-colors" href="#">About Us</a>
-            <a class="text-emerald-700/60 hover:text-yellow-600 transition-colors" href="#">Contact</a>
-            <a class="text-emerald-900 font-bold hover:text-yellow-600 transition-colors" href="#">Privacy Policy</a>
-        </div>
-        <div class="flex space-x-6">
-            <span class="material-symbols-outlined text-emerald-900/40 hover:text-primary transition-colors cursor-pointer"
-                data-icon="public">public</span>
-            <span class="material-symbols-outlined text-emerald-900/40 hover:text-primary transition-colors cursor-pointer"
-                data-icon="mail">mail</span>
-            <span class="material-symbols-outlined text-emerald-900/40 hover:text-primary transition-colors cursor-pointer"
-                data-icon="share">share</span>
-        </div>
-    </div>
-</footer>
+<app-hazard-report-modal *ngIf="showHazardModal" (close)="showHazardModal = false"></app-hazard-report-modal>

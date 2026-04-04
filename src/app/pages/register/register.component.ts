@@ -1,11 +1,48 @@
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SurvivorService } from './survivor.service';
 import { AuthService } from '../../services/auth.service';
+import { AlertService } from '../../services/alert.service';
 import { PersistenceService } from '../../services/persistence.service';
 import { SpeechService } from '../../services/speech.service';
+
+// Custom Validator for common passwords (123, abc, etc.)
+export function passwordComplexityValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (!value) return null;
+    
+    const commonSequences = ['123', '234', '345', '456', '567', '678', '789', 'abc', 'qwerty', 'password'];
+    const isCommon = commonSequences.some(seq => value.toLowerCase().includes(seq));
+    
+    // Check for repetitive chars like 111, aaa
+    const isRepetitive = /(.)\1\1/.test(value);
+    
+    if (isCommon || isRepetitive) {
+      return { simplePassword: true };
+    }
+    return null;
+  };
+}
+
+// Custom Validator for DOB (at least 1 month old)
+export function dobValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (!value) return null;
+    
+    const selectedDate = new Date(value);
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    
+    if (selectedDate > oneMonthAgo) {
+      return { tooRecent: true };
+    }
+    return null;
+  };
+}
 
 @Component({
   selector: 'app-register',
@@ -27,6 +64,7 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private survivorService: SurvivorService,
     private authService: AuthService,
+    private alertService: AlertService,
     private persistenceService: PersistenceService,
     private speechService: SpeechService,
     private router: Router
@@ -36,11 +74,27 @@ export class RegisterComponent implements OnInit {
 
   toggleVoice(): void {
     this.isVoiceEnabled = !this.isVoiceEnabled;
+    this.speechService.toggleListening();
     if (this.isVoiceEnabled) {
-      this.speechService.speak('Voice guidance activated. Focus on any field to hear it read.');
+      this.speechService.speak('Voice guidance and navigation activated. You can now use voice commands like Go Home, Go to Donate, Scroll Down, or Back. To fill a field, focus it and wait for the instruction.');
     } else {
       this.speechService.speak('Voice guidance deactivated.');
     }
+  }
+
+  private getFieldLabel(key: string): string {
+    const labels: { [key: string]: string } = {
+        fullName: 'Full Name',
+        contact: 'Contact Number',
+        idType: 'ID Type',
+        idNumber: 'ID Number',
+        parish: 'Parish',
+        address: 'Address',
+        dob: 'Date of Birth',
+        damageLevel: 'Damage Level',
+        password: 'Password'
+    };
+    return labels[key] || key;
   }
 
   speakField(label: string, instruction: string = ''): void {
@@ -51,8 +105,10 @@ export class RegisterComponent implements OnInit {
 
 
   ngOnInit(): void {
-    // Prevent future DOB
-    this.today = new Date().toISOString().split('T')[0];
+    // Prevent future DOB by setting max date to yesterday
+    const pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 1);
+    this.today = pastDate.toISOString().split('T')[0];
 
     // Form setup
     this.survivorForm = this.fb.group({
@@ -63,9 +119,19 @@ export class RegisterComponent implements OnInit {
       provisional: [false],
       parish: ['', Validators.required],
       address: [''],
-      dob: ['', Validators.required],
+      dob: ['', [Validators.required, dobValidator()]],
       damageLevel: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6), passwordComplexityValidator()]],
+      // Emergency Medical Fields (Optional)
+      weight: [''],
+      emergencyContact: [''],
+      bloodType: [''],
+      currentMedications: [''],
+      medicalConditions: [''],
+      allergies: [''],
+      preferredDoctorName: [''],
+      doctorContactNumber: [''],
+      medicalConsent: [false]
     });
 
     // Restore saved form data
@@ -73,6 +139,17 @@ export class RegisterComponent implements OnInit {
     if (savedData) {
       this.survivorForm.patchValue(savedData, { emitEvent: false });
     }
+
+    // Subscribe to voice results for fields
+    this.speechService.fieldResult$.subscribe(text => {
+      if (this.activeVoiceField) {
+        // Basic capitalizing for names/address
+        const formatted = text.charAt(0).toUpperCase() + text.slice(1);
+        this.survivorForm.get(this.activeVoiceField)?.setValue(formatted);
+        this.activeVoiceField = '';
+        this.speechService.speak('Added ' + formatted);
+      }
+    });
 
     // Save on change
     this.survivorForm.valueChanges.subscribe(val => {
@@ -97,6 +174,14 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  activeVoiceField: string = '';
+
+  listenToField(fieldName: string): void {
+    this.activeVoiceField = fieldName;
+    this.speechService.speak('Listening for ' + fieldName);
+    this.speechService.startFieldInput();
+  }
+
 
 
   showSuccessModal = false;
@@ -105,8 +190,44 @@ export class RegisterComponent implements OnInit {
   submit(): void {
     if (this.survivorForm.invalid) {
       this.survivorForm.markAllAsTouched();
-      // Keep simple alert for validation errors or convert to toast later
-      alert('Please complete all required fields');
+      
+      const missingFields: string[] = [];
+      let firstInvalidId = '';
+
+      Object.keys(this.survivorForm.controls).forEach(key => {
+        const control = this.survivorForm.get(key);
+        if (control?.invalid) {
+          missingFields.push(this.getFieldLabel(key));
+          if (!firstInvalidId) firstInvalidId = key;
+        }
+      });
+
+      const errorMsg = `Please complete the following required fields: ${missingFields.join(', ')}.`;
+      
+      if (this.isVoiceEnabled) {
+          this.speechService.speak(errorMsg);
+      }
+      
+      this.alertService.show({
+        type: 'error',
+        title: 'Missing Information',
+        message: errorMsg,
+        btnText: 'Let me fix those'
+      });
+
+      if (firstInvalidId) {
+          // Find the specific control element
+          const element = document.getElementById(firstInvalidId) || document.querySelector(`[formControlName="${firstInvalidId}"]`) as HTMLElement;
+          
+          if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              element.focus({ preventScroll: true });
+              
+              // Add a visual shake/error highlight briefly
+              element.classList.add('error-shake');
+              setTimeout(() => element.classList.remove('error-shake'), 1000);
+          }
+      }
       return;
     }
 
@@ -145,7 +266,8 @@ export class RegisterComponent implements OnInit {
       },
       error: (err) => {
         console.error('Registration error:', err);
-        alert(err || 'Registration failed. Please try again.');
+        const errorMsg = err.error?.error || err.error?.message || 'Registration failed. Please try again.';
+        this.alertService.error('Registration Failed', errorMsg);
       }
     });
 

@@ -1,7 +1,16 @@
 .breadcrumb-nav {
-  padding: 15px 40px;
-  background: transparent;
-  border-bottom: 2px solid #009B3A;
+  padding: 8px 40px;
+  background: #000;
+  border-bottom: 2px solid #FED100;
+  color: #fff;
+}
+
+.breadcrumb-flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .breadcrumb-list {
@@ -26,7 +35,7 @@
 }
 
 .breadcrumb-item a {
-  color: #009B3A;
+  color: #FED100;
   text-decoration: none;
   transition: all 0.2s;
   padding: 4px 8px;
@@ -35,25 +44,97 @@
 }
 
 .breadcrumb-item a:hover {
-  background: #009B3A;
-  color: #FED100;
+  background: #FED100;
+  color: #000;
 }
 
 .breadcrumb-item.active {
-  color: #000;
+  color: #fff;
   font-weight: bold;
 }
 
-:host-context(.dark-theme) .breadcrumb-item.active {
-  color: #fff;
-}
-
 .separator {
-  color: #666;
+  color: #888;
   font-size: 0.8rem;
   margin-left: 10px;
 }
 
-:host-context(.dark-theme) .separator {
-  color: #aaa;
+/* Integrated Tools Styles */
+
+.accessibility-integrated-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #888;
+  letter-spacing: 1px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-group button {
+  background: #222;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-group button.active {
+  background: #FED100;
+  color: #000;
+  border-color: #FED100;
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background: #333;
+  margin: 0 4px;
+}
+
+.voice-btn {
+  background: transparent;
+  border: 1px solid #333;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.voice-btn.is-active {
+  border-color: #FED100;
+  color: #FED100;
+}
+
+.voice-btn:hover {
+  background: #333;
+}
+
+.material-symbols-outlined {
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .breadcrumb-flex-container {
+      flex-direction: column;
+      align-items: flex-start;
+  }
 }

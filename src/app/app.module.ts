@@ -30,6 +30,10 @@ import { BreadcrumbComponent } from './layout/breadcrumb/breadcrumb.component';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
+import { HazardReportModalComponent } from './pages/hazard-report/hazard-report-modal.component';
+import { AlertComponent } from './components/alert/alert.component';
+import { AccessibilityToolbarComponent } from './components/accessibility-toolbar/accessibility-toolbar.component';
+import { AiChatbotComponent } from './components/ai-chatbot/ai-chatbot.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +52,11 @@ import { PrivacyComponent } from './pages/privacy/privacy.component';
     AdminDashboardComponent,
     SitemapComponent,
     BreadcrumbComponent,
-    PrivacyComponent
+    PrivacyComponent,
+    HazardReportModalComponent,
+    AlertComponent,
+    AccessibilityToolbarComponent,
+    AiChatbotComponent
   ],
   imports: [
     BrowserModule,

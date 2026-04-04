@@ -38,13 +38,18 @@ app.use((req, res, next) => {
 // Routes
 const survivorRoutes = require('./survivorroutes/survivors');
 const paymentRoutes = require('./survivorroutes/payments');
+const hazardRoutes = require('./survivorroutes/hazards');
 
 app.use('/api/survivors', survivorRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/hazards', hazardRoutes);
 
-// Test route
-app.get('/', (req, res) => {
-  res.send('JA Relief API running');
+// Serve static files from the frontend build
+app.use(express.static(path.join(__dirname, '../dist/ja-relief')));
+
+// Catch all other routes to enable Angular router navigation (e.g. /register)
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/ja-relief/index.html'));
 });
 
 // Global Error Handler

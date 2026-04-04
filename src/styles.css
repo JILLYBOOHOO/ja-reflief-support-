@@ -9,12 +9,63 @@
 }
 
 body.dark-theme {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --card-bg: #1e1e1e;
-    --card-border: #333333;
-    --primary-color: #2b80ff;
-    --primary-hover: #63b8ff;
+    --bg-color: #0c0d0c;
+    --text-color: #f1f3f1;
+    --card-bg: #1a1c1a;
+    --card-border: #3e4a3c;
+    --primary-color: #62df74;
+    --primary-hover: #4bb45a;
+    --surface-container: #1e211e;
+    --surface-container-high: #242924;
+    --outline: #8c938c;
+    --inverse-surface: #f8faf8;
+    --on-surface: #f1f3f1;
+}
+
+body.dark-theme .register-form,
+body.dark-theme .donate-card,
+body.dark-theme .dashboard-card,
+body.dark-theme .bg-white {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--card-border) !important;
+}
+
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select {
+    background-color: #1a1c1a !important;
+    color: #f1f3f1 !important;
+    border-color: #3e4a3c !important;
+}
+
+body.dark-theme .text-jamaica-black {
+    color: #f1f3f1 !important;
+}
+
+body.dark-theme .bg-slate-100 {
+    background-color: #242924 !important;
+}
+
+body.dark-theme .border-slate-200 {
+    border-color: #3e4a3c !important;
+}
+
+/* Accessibility Focus States */
+:focus-visible {
+    outline: 4px solid var(--jamaica-gold, #fed100);
+    outline-offset: 4px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 html, body {
@@ -78,4 +129,45 @@ img, video {
 .btn:focus {
     outline: 3px solid #ffcc00;
     outline-offset: 3px;
+}
+
+/* Global Font Size Controls */
+.font-size-large p, .font-size-large span, .font-size-large a, .font-size-large li, .font-size-large label, .font-size-large button {
+    font-size: 1.25em !important;
+}
+.font-size-large h1 { font-size: 3rem !important; }
+.font-size-large h2 { font-size: 2.5rem !important; }
+.font-size-large h3 { font-size: 2rem !important; }
+
+.font-size-huge p, .font-size-huge span, .font-size-huge a, .font-size-huge li, .font-size-huge label, .font-size-huge button {
+    font-size: 1.5em !important;
+}
+.font-size-huge h1 { font-size: 4rem !important; }
+.font-size-huge h2 { font-size: 3.5rem !important; }
+.font-size-huge h3 { font-size: 3rem !important; }
+
+/* Increase specific donation page field labels when scaled */
+.font-size-huge .form-field label {
+    font-size: 2.2rem !important;
+}
+.font-size-huge .form-field input {
+    font-size: 2.4rem !important;
+}
+
+/* Tour Highlight Animation */
+.tour-highlight {
+    outline: 6px solid #FED100 !important;
+    outline-offset: 8px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 0 40px rgba(254, 209, 0, 0.6) !important;
+    z-index: 9999 !important;
+    position: relative !important;
+    background-color: rgba(254, 209, 0, 0.05) !important;
+    transition: all 0.3s ease;
+    animation: tour-pulse 1.5s infinite alternate;
+}
+
+@keyframes tour-pulse {
+    from { box-shadow: 0 0 20px rgba(254, 209, 0, 0.3); }
+    to { box-shadow: 0 0 50px rgba(254, 209, 0, 0.8); }
 }

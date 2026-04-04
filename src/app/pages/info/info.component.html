@@ -13,6 +13,20 @@
             <p class="subtitle">Stay informed, stay prepared, stay safe.</p>
         </header>
 
+        <!-- Public Safety Warning / Report Button -->
+        <div class="mb-8 p-4 bg-red-50 border-2 border-red-100 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm" style="margin-top: 1rem;">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-red-600 text-3xl animate-pulse">report_problem</span>
+                <div>
+                    <h3 class="font-black text-red-900 uppercase tracking-tighter text-sm">Have you spotted a dangerous area?</h3>
+                    <p class="text-xs text-red-700/70 font-bold">Help your community by reporting landslides, flooding, or blocked roads.</p>
+                </div>
+            </div>
+            <button (click)="showHazardModal = true" class="bg-red-600 text-white px-6 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-black transition-all shadow-md mt-4 md:mt-0">
+                Report Danger Zone
+            </button>
+        </div>
+
         <!-- 1. Real-time Disaster Alert Panel -->
         <div class="alert-panel card">
             <div class="card-header">
@@ -90,6 +104,41 @@
             </div>
         </div>
 
+        <!-- Fire Extinguisher Guide -->
+        <div class="fire-ext-section card border-2 border-red-100 bg-white rounded-2xl shadow-sm overflow-hidden mb-12">
+            <div class="p-6 bg-red-50 border-b border-red-100">
+                <h2 class="text-2xl font-black text-red-800 flex items-center gap-3 lowercase first-letter:uppercase">
+                    <span class="material-symbols-outlined text-3xl">fire_extinguisher</span>
+                    How to Use a Fire Extinguisher (P.A.S.S. Method)
+                </h2>
+            </div>
+            <div class="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">1️⃣</div>
+                    <h3 class="font-black text-red-700 uppercase tracking-tight text-xl" style="font-family: 'Public Sans', sans-serif;">PULL</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mt-2" style="font-family: 'Inter', sans-serif;">Pull the pin to break the tamper seal and enable discharge.</p>
+                </div>
+                <div class="flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">2️⃣</div>
+                    <h3 class="font-black text-red-700 uppercase tracking-tight text-xl" style="font-family: 'Public Sans', sans-serif;">AIM</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mt-2" style="font-family: 'Inter', sans-serif;">Aim low, pointing the nozzle or hose at the base of the fire.</p>
+                </div>
+                <div class="flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">3️⃣</div>
+                    <h3 class="font-black text-red-700 uppercase tracking-tight text-xl" style="font-family: 'Public Sans', sans-serif;">SQUEEZE</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mt-2" style="font-family: 'Inter', sans-serif;">Squeeze the handle to release the extinguishing agent.</p>
+                </div>
+                <div class="flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">4️⃣</div>
+                    <h3 class="font-black text-red-700 uppercase tracking-tight text-xl" style="font-family: 'Public Sans', sans-serif;">SWEEP</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mt-2" style="font-family: 'Inter', sans-serif;">Sweep side to side at the base of the fire until it's completely out.</p>
+                </div>
+            </div>
+            <div class="bg-red-800 text-white p-4 text-center text-xs font-black uppercase tracking-[0.2em]" style="font-family: 'Lexend', sans-serif;">
+                ⚠️ WARNING: ONLY ATTEMPT TO FIGHT SMALL PERSONAL FIRES IF YOU HAVE A CLEAR EXIT PATH.
+            </div>
+        </div>
+
         <!-- 4. Important Services List -->
         <div class="services-section">
             <h2>🏥 Important Services & Locations</h2>
@@ -147,10 +196,11 @@
             </ul>
             <p class="note">This helps residents avoid dangerous locations during storms.</p>
         </div>
-
         <footer class="info-footer">
             <p>Source Information from ODPEM and JIS.</p>
             <a routerLink="/" class="back-btn">Back to Home</a>
         </footer>
     </div>
 </section>
+
+<app-hazard-report-modal *ngIf="showHazardModal" (close)="showHazardModal = false"></app-hazard-report-modal>

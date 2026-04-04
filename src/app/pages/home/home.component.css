@@ -122,7 +122,10 @@
     background: #FFFFFF !important;
     color: #000000 !important;
     box-shadow: 6px 6px 0px #FED100 !important;
-    width: 340px !important;
+    width: 380px !important; /* Increased width */
+    height: 70px !important; /* Increased height for two lines */
+    padding: 10px 20px !important;
+    line-height: 1.2 !important;
 }
 
 /* =========================

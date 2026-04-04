@@ -6,6 +6,21 @@
 
 #main {
     flex: 1;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.breadcrumb-container {
+    background: #f4f4f4;
+    border-bottom: 2px solid #009B3A;
+    display: block !important;
+    width: 100%;
+    margin-top: 0;
+}
+
+.page-content-wrapper {
+    display: flex;
+    flex-direction: column;
 }
 
 /* Cookie Banner */

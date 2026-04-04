@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 export class InfoComponent implements OnInit, OnDestroy {
     currentWeather: WeatherState = 'sunny';
     updates: AlertUpdate[] = [];
+    showHazardModal = false;
     private sub = new Subscription();
 
     constructor(

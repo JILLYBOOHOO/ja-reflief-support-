@@ -78,7 +78,8 @@ input[type="text"],
 input[type="tel"],
 input[type="password"],
 input[type="date"],
-select {
+select,
+textarea {
     width: 100%;
     min-height: 84px;
     padding: 0 32px;
@@ -93,11 +94,16 @@ select {
 }
 
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
     outline: none;
     border-color: #3498db;
     box-shadow: 0 0 0 8px rgba(52, 152, 219, 0.2);
     border-width: 4px;
+}
+
+textarea {
+    padding: 20px 32px;
 }
 
 /* Checkbox Layout - ULTRA LARGE */
@@ -239,4 +245,35 @@ fieldset.form-group legend {
         font-size: 1.8rem;
         min-height: 80px;
     }
+}@keyframes mic-pulse { 0% { transform: translateY(-50%) scale(1); box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.4); } 70% { transform: translateY(-50%) scale(1.1); box-shadow: 0 0 0 10px rgba(229, 62, 62, 0); } 100% { transform: translateY(-50%) scale(1); box-shadow: 0 0 0 0 rgba(229, 62, 62, 0); } } .voice-input-wrapper { position: relative; width: 100%; } .voice-mic-btn { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #cbd5e0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; z-index: 10; padding: 10px; border-radius: 50%; } .voice-mic-btn.active { color: #e53e3e; animation: mic-pulse 1.5s infinite; background: #fff5f5; } .voice-input-wrapper input, .voice-input-wrapper textarea { padding-right: 70px !important; }
+
+.field-error-msg {
+  color: #ef4444;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-top: 8px;
+  padding-left: 4px;
+  animation: fadeIn 0.3s ease-out;
 }
+
+.field-hint {
+  font-size: 1.2rem;
+  color: #718096;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+
+@keyframes error-shake {
+  0%, 100% { transform: translateX(0); border-color: #cbd5e0; }
+  25% { transform: translateX(-8px); border-color: #ef4444; }
+  50% { transform: translateX(8px); border-color: #ef4444; }
+  75% { transform: translateX(-8px); border-color: #ef4444; }
+}
+
+.error-shake {
+  animation: error-shake 0.4s ease-in-out;
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2) !important;
+}
+

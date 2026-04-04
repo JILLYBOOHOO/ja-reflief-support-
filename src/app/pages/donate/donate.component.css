@@ -424,29 +424,31 @@
     gap: 25px;
 }
 
-.form-field label {
-    font-size: 1rem;
-    font-weight: 800;
-    color: var(--donate-text);
-    opacity: 0.8;
-    margin-bottom: 10px;
-    display: block;
-}
-
-.form-field input, .form-select {
-    width: 100%;
-    padding: 16px;
-    background: var(--donate-input-bg);
-    border: 2px solid var(--donate-border);
-    border-radius: 12px;
-    color: var(--donate-input-text);
-    font-size: 1.1rem;
-    outline: none;
-}
-
 .top-donor-info .form-field input:focus {
     border-color: var(--donate-accent);
 }
+
+/* Enlarge Step 1 Form Labels and Inputs */
+.form-field label {
+    font-size: 1.4rem !important;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.form-field input {
+    font-size: 1.6rem !important;
+    min-height: 80px;
+}
+
+.form-header h2 {
+    font-size: 2.8rem !important;
+}
+
+.form-header p {
+    font-size: 1.4rem !important;
+    font-weight: 600;
+}
+
 
 /* =========================================
    In-Kind Donation Styles

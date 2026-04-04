@@ -1,0 +1,22 @@
+<div class="accessibility-bar">
+  <div class="container">
+    <div class="accessibility-controls">
+      <span class="label">Accessibility Tools:</span>
+      <div class="btn-group">
+        <button (click)="setSize('normal')" [class.active]="currentSize === 'normal'" title="Normal Font">A</button>
+        <button (click)="setSize('large')" [class.active]="currentSize === 'large'" title="Large Font">A+</button>
+        <button (click)="setSize('huge')" [class.active]="currentSize === 'huge'" title="Extra Large Font">A++</button>
+      </div>
+      <div class="divider"></div>
+      <button class="voice-nav-indicator" [class.is-active]="(accessibilityService.isAudioEnabled$ | async)" (click)="toggleAudio()" title="Toggle Voice Guide/Audio">
+         <span class="material-symbols-outlined">{{ (accessibilityService.isAudioEnabled$ | async) ? 'volume_up' : 'volume_off' }}</span>
+         Voice Guide
+      </button>
+      <div class="divider"></div>
+      <button class="voice-nav-indicator" [class.is-active]="(speechService.isListening$ | async)" (click)="toggleVoice()" title="Toggle Universal Voice Navigation">
+         <span class="material-symbols-outlined">{{ (speechService.isListening$ | async) ? 'mic' : 'mic_off' }}</span>
+         Voice Navigation
+      </button>
+    </div>
+  </div>
+</div>

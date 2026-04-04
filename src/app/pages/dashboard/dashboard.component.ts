@@ -14,6 +14,7 @@ export class DashboardComponent implements OnInit {
   pantryForm!: FormGroup;
   profileForm!: FormGroup;
   isEditingProfile = false;
+  showHazardModal = false;
 
   // Virtual card flip
   isCardFlipped = false;
@@ -117,6 +118,39 @@ export class DashboardComponent implements OnInit {
       }
     });
     return count;
+  }
+
+  get allergiesList(): string[] {
+    if (!this.currentUser?.allergies) return [];
+    return this.currentUser.allergies.split(',').map(s => s.trim()).filter(s => s !== '');
+  }
+
+  get medicalConditionsList(): string[] {
+    if (!this.currentUser?.medicalConditions) return [];
+    return this.currentUser.medicalConditions.split(',').map(s => s.trim()).filter(s => s !== '');
+  }
+
+  get medicationsList(): string[] {
+    if (!this.currentUser?.currentMedications) return [];
+    return this.currentUser.currentMedications.split(',').map(s => s.trim()).filter(s => s !== '');
+  }
+
+  get age(): number {
+    if (!this.currentUser?.dob) return 0;
+    const birthDate = new Date(this.currentUser.dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }
+
+  get formattedDOB(): string {
+    if (!this.currentUser?.dob) return 'N/A';
+    const date = new Date(this.currentUser.dob);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
   constructor(
@@ -236,9 +270,17 @@ export class DashboardComponent implements OnInit {
 
   saveProfile(): void {
     if (this.profileForm.valid && this.currentUser) {
+      const newIdNumber = this.profileForm.value.idNumber;
+      
+      // Prevent sequential repeating digits (e.g., 00, 11, 22... 55)
+      if (newIdNumber && /([0-9])\1/.test(newIdNumber)) {
+        alert('Security Alert: ID Number cannot contain sequential repeating digits (e.g., 55). Please enter a valid unique ID.');
+        return;
+      }
+
       this.authService.updateUser({
         name: this.profileForm.value.name,
-        idNumber: this.profileForm.value.idNumber
+        idNumber: newIdNumber
       });
       // The BehaviorSubject will instantly emit and update this.currentUser because it's synchronous
       this.currentUser = this.authService.currentUserValue;
