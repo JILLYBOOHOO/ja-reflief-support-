@@ -8,7 +8,7 @@ import { SocialLoginModule, GoogleSigninButtonModule } from '@abacritt/angularx-
 const routes: Routes = [{ path: '', component: LoginComponent }];
 
 @NgModule({
-  declarations: [],
+  declarations: [LoginComponent],
   imports: [
     CommonModule,
     FormsModule,

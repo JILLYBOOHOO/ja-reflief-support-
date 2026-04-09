@@ -33,7 +33,7 @@ export class AccessibilityToolbarComponent implements OnInit {
 
 
   toggleVoice() {
-    this.speechService.toggleListening('Listening');
+    this.speechService.toggleListening('command');
   }
 
   readPage() {

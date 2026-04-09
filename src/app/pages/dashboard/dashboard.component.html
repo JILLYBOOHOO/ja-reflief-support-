@@ -8,17 +8,17 @@
         </div>
 
         <!-- Real-time Request Status Horizontal Bar -->
-        <div *ngIf="hasActiveRequest" class="mb-8 p-10 bg-white dark:bg-[#0c0d0c] rounded-[3rem] shadow-2xl border-2 border-jamaica-green transition-all duration-700 animate-in slide-in-from-top-10">
+        <div id="tour-step-tracker" *ngIf="hasActiveRequest" class="mb-8 p-10 bg-white dark:bg-[#0c0d0c] rounded-[3rem] shadow-2xl border-2 border-jamaica-green transition-all duration-700 animate-in slide-in-from-top-10">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-6">
-                    <div class="bg-jamaica-green p-4 rounded-2xl shadow-lg shadow-jamaica-green/40">
-                        <span class="material-symbols-outlined text-white text-4xl">
-                            {{ currentRequestStatus === 'Out for Delivery' ? 'local_shipping' : (currentRequestStatus === 'Packing' ? 'inventory_2' : 'shopping_bag') }}
+                    <div class="bg-[#00220a] p-4 rounded-2xl shadow-lg shadow-black/20 border border-[#39FF14]/30">
+                        <span class="material-symbols-outlined text-[#39FF14] text-4xl">
+                            {{ currentRequestStatus === 'Out for Delivery' ? 'local_shipping' : (currentRequestStatus === 'Packing' ? 'inventory_2' : (currentRequestStatus === 'Request Made' ? 'assignment' : 'task_alt')) }}
                         </span>
                     </div>
                     <div>
                         <h3 class="text-2xl font-black text-jamaica-black dark:text-white uppercase tracking-tight">Relief Progress</h3>
-                        <p class="text-sm font-bold text-jamaica-green uppercase tracking-widest">{{ currentRequestStatus }}</p>
+                        <p class="text-sm font-bold text-[#008731] uppercase tracking-widest">{{ currentRequestStatus }}</p>
                     </div>
                 </div>
                 <div class="text-right">
@@ -30,14 +30,16 @@
             </div>
 
             <!-- Enhanced Progress Track -->
-            <div class="relative h-7 bg-black rounded-full overflow-hidden mb-10 border-4 border-slate-200 dark:border-white/10 shadow-inner">
-                <div class="absolute inset-y-0 left-0 bg-gradient-to-r from-[#000000] via-[#39FF14] to-[#000000] transition-all duration-1000 ease-out shadow-[0_0_40px_rgba(57,255,20,0.8)]"
-                     [style.width]="currentRequestStatus === 'Request Made' ? '20%' : (currentRequestStatus === 'Packing' ? '50%' : (currentRequestStatus === 'Out for Delivery' ? '80%' : '100%'))">
-                    <div class="w-full h-full bg-white/10 animate-[pulse_1s_infinite]"></div>
-                     <!-- Animated Item moving along the bar -->
-                     <span class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 material-symbols-outlined text-black text-xl bg-[#39FF14] rounded-full p-1.5 border-4 border-black shadow-[0_0_20px_rgba(57,255,20,0.5)]">
-                        {{ currentRequestStatus === 'Out for Delivery' ? 'local_shipping' : (currentRequestStatus === 'Packing' ? 'inventory_2' : (currentRequestStatus === 'Request Made' ? 'assignment' : 'task_alt')) }}
-                     </span>
+            <div class="tracker-gradient-border h-9 mb-10">
+                <div class="tracker-gradient-border-inner relative">
+                    <div class="absolute inset-y-0 left-0 tracker-progress-gradient transition-all duration-1000 ease-out"
+                         [style.width]="currentRequestStatus === 'Request Made' ? '20%' : (currentRequestStatus === 'Packing' ? '50%' : (currentRequestStatus === 'Out for Delivery' ? '80%' : '100%'))">
+                        <div class="w-full h-full bg-white/10 animate-[pulse_1.5s_infinite]"></div>
+                         <!-- Animated Item moving along the bar -->
+                         <span class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 material-symbols-outlined text-black text-xl bg-[#ffbb16] rounded-full p-1.5 border-4 border-black shadow-[0_0_20px_rgba(255,187,22,0.5)]">
+                            {{ currentRequestStatus === 'Out for Delivery' ? 'local_shipping' : (currentRequestStatus === 'Packing' ? 'inventory_2' : (currentRequestStatus === 'Request Made' ? 'assignment' : 'task_alt')) }}
+                         </span>
+                    </div>
                 </div>
             </div>
 
@@ -72,6 +74,50 @@
                         <span class="material-symbols-outlined text-2xl font-black">task_alt</span>
                     </div>
                     <span class="text-[10px] font-black uppercase text-center tracking-tighter" [ngClass]="currentRequestStatus === 'Delivered' ? 'text-jamaica-green font-black drop-shadow-sm' : 'text-slate-400'">Delivered</span>
+                </div>
+            </div>
+
+            <!-- Active Request Details & History Archive -->
+            <div class="mt-12 pt-10 border-t-2 border-dashed border-slate-100 dark:border-white/10">
+                <div class="flex flex-col md:flex-row justify-between items-start gap-8">
+                    <!-- Current Selection Summary -->
+                    <div class="flex-[2]">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="material-symbols-outlined text-jamaica-green">inventory</span>
+                            <h4 class="text-[11px] font-black text-jamaica-black dark:text-white uppercase tracking-[0.2em]">Active Request Parcel</h4>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span *ngFor="let item of lastRequestItems" 
+                                  class="px-4 py-1.5 bg-slate-100 dark:bg-black rounded-xl text-[10px] font-black text-jamaica-black dark:text-[#39FF14] border-2 border-slate-200 dark:border-[#39FF14]/30 shadow-sm transition-all hover:scale-105">
+                                {{ item.name }}
+                            </span>
+                        </div>
+                        <p class="text-[9px] font-bold text-slate-400 mt-4 uppercase tracking-widest">Logged on: {{ lastRequestDate | date:'MMMM d, y | h:mm a' }}</p>
+                    </div>
+
+                    <!-- Divider for history -->
+                    <div class="hidden md:block w-px h-32 bg-slate-100 dark:bg-white/10 self-center"></div>
+
+                    <!-- Compact Request Archive -->
+                    <div class="flex-1 w-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Request Archive</h4>
+                            <span class="text-[9px] font-bold bg-slate-100 dark:bg-white/10 px-2 py-0.5 rounded text-slate-500 uppercase">{{ requestHistory.length }} Entries</span>
+                        </div>
+                        <div class="space-y-3 max-h-[140px] overflow-y-auto custom-scrollbar pr-2">
+                            <div *ngFor="let entry of requestHistory" class="p-3 bg-slate-50 dark:bg-black rounded-2xl border border-slate-100 dark:border-[#39FF14]/20 flex justify-between items-center group hover:bg-white dark:hover:bg-[#1a1c1a] transition-all">
+                                <div>
+                                    <p class="text-[10px] font-black text-jamaica-black dark:text-[#39FF14] leading-none mb-1">{{ entry.date | date:'MMM d, h:mm a' }}</p>
+                                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-tighter truncate max-w-[120px]">{{ entry.items.join(', ') }}</p>
+                                </div>
+                                <span class="text-[8px] font-black px-2 py-1 rounded bg-jamaica-green/10 text-jamaica-green uppercase tracking-tighter">{{ entry.status }}</span>
+                            </div>
+                            <div *ngIf="requestHistory.length === 0" class="py-6 text-center opacity-30">
+                                <span class="material-symbols-outlined text-2xl mb-1">history_toggle_off</span>
+                                <p class="text-[8px] font-black uppercase tracking-widest">No previous requests</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -325,7 +371,7 @@
                 </div>
 
                 <!-- Emergency Medical Card Section (High Contrast Red) -->
-                <div class="flex flex-col items-center gap-6">
+                <div id="tour-step-medical" class="flex flex-col items-center gap-6">
                     <div class="w-full min-w-[340px] max-w-lg min-h-[460px] bg-white dark:bg-[#0c0d0c] rounded-[3rem] shadow-2xl overflow-hidden border-4 border-red-600 relative group transition-all hover:scale-[1.02]">
                         <div class="bg-red-600 p-6 text-white flex justify-between items-center">
                         <div class="flex items-center gap-4">

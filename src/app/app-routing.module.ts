@@ -21,10 +21,10 @@ import { AuthGuard } from './guards/auth.guard';
 const routes: Routes = [
     { path: '', component: HomeComponent, data: { breadcrumb: 'Home' } },
     { path: 'help', loadChildren: () => import('./pages/survivor-entry/survivor-entry.module').then(m => m.SurvivorEntryModule), data: { breadcrumb: 'Request Aid' } },
-    { path: 'donate', component: DonateComponent, data: { breadcrumb: 'Donate' } },
+    { path: 'donate', loadChildren: () => import('./pages/donate/donate.module').then(m => m.DonateModule), data: { breadcrumb: 'Donate' } },
     { path: 'wifi-access', component: WifiAccessComponent, data: { breadcrumb: 'Wifi Vouchers' } },
-    { path: 'register', component: RegisterComponent, data: { breadcrumb: 'Register' } },
-    { path: 'login', component: LoginComponent, data: { breadcrumb: 'Login' } },
+    { path: 'register', loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterModule), data: { breadcrumb: 'Register' } },
+    { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule), data: { breadcrumb: 'Login' } },
     { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule), canActivate: [AuthGuard], data: { breadcrumb: 'Dashboard' } },
     { path: 'information', loadChildren: () => import('./pages/info/info.module').then(m => m.InfoModule), data: { breadcrumb: 'Information' } },
     { path: 'sitemap', component: SitemapComponent, data: { breadcrumb: 'Sitemap' } },

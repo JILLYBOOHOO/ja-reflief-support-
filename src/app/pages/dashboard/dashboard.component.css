@@ -114,12 +114,51 @@ header h1, .id-card-perspective h1 {
     border: 2px solid #39FF14 !important;
 }
 
-/* Prevent dark-mode overrides from clobbering gradient border cards */
-:host-context(.dark-theme) .ja-gradient-border,
-:host-context(.dark-theme) .ja-gradient-border-inner,
-:host-context(.dark-theme) .ja-gradient-border-inner * {
+/* Prevent dark-mode overrides from clobbering gradient border cards, but ensure visibility */
+:host-context(.dark-theme) .ja-gradient-border {
     border: none !important;
     outline: none !important;
+    box-shadow: 0 0 30px rgba(57, 255, 20, 0.2);
+}
+
+:host-context(.dark-theme) .ja-gradient-border-inner {
+    background-color: #000000 !important;
+}
+
+:host-context(.dark-theme) .ja-gradient-border-inner div.bg-white {
+    background-color: #000000 !important;
+}
+
+:host-context(.dark-theme) .ja-gradient-border-inner label {
+    background-color: #111111 !important;
+    border-color: #39FF1420 !important;
+}
+
+:host-context(.dark-theme) .ja-gradient-border-inner label:hover {
+    background-color: #1a1a1a !important;
+    border-color: #39FF14 !important;
+}
+
+:host-context(.dark-theme) .ja-gradient-border-inner span.text-jamaica-black,
+:host-context(.dark-theme) .ja-gradient-border-inner span.text-\[\#191c1e\],
+:host-context(.dark-theme) .ja-gradient-border-inner h3 {
+    color: #39FF14 !important; /* Use neon green for item names and headers in dark mode */
+}
+
+:host-context(.dark-theme) .ja-gradient-border-inner p {
+    color: #ffffff !important;
+    opacity: 0.7 !important;
+}
+
+:host-context(.dark-theme) .ja-gradient-border-inner textarea {
+    background-color: #1a1c1a !important;
+    color: #ffffff !important;
+    border: 2px solid #39FF14 !important;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+:host-context(.dark-theme) .ja-gradient-border-inner textarea::placeholder {
+    color: rgba(57, 255, 20, 0.3) !important;
 }
 
 :host-context(.dark-theme) .header-gradient {
@@ -231,4 +270,31 @@ aside {
     flex-direction: column;
     background: #ffffff;
     border: none !important;
+}
+
+/* Tracker Gradient Border */
+.tracker-gradient-border {
+    position: relative;
+    border-radius: 9999px;
+    padding: 3px; /* Slightly thinner for elegance */
+    background: linear-gradient(135deg, #ffd100 0%, #008731 50%, #000000 100%);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tracker-gradient-border-inner {
+    border-radius: 9999px;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    background: #000000;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.tracker-progress-gradient {
+    background: linear-gradient(90deg, #39FF14 0%, #ffbb16 100%);
+    box-shadow: 0 0 25px rgba(57, 255, 20, 0.4), 0 0 50px rgba(255, 187, 22, 0.2);
+    border-right: 2px solid rgba(255, 255, 255, 0.3);
 }

@@ -6,7 +6,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { SocialLoginModule, GoogleSigninButtonModule, SocialAuthServiceConfig, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { QRCodeComponent } from 'angularx-qrcode';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -23,9 +22,6 @@ import { BreadcrumbComponent } from './layout/breadcrumb/breadcrumb.component';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
-import { RegisterComponent } from './pages/register/register.component';
-import { LoginComponent } from './pages/login/login.component';
-import { DonateComponent } from './pages/donate/donate.component';
 import { SharedModule } from './shared/shared.module';
 import { AlertComponent } from './components/alert/alert.component';
 import { AccessibilityToolbarComponent } from './components/accessibility-toolbar/accessibility-toolbar.component';
@@ -46,10 +42,7 @@ import { MaintenanceComponent } from './pages/maintenance/maintenance.component'
     AlertComponent,
     AccessibilityToolbarComponent,
     AiChatbotComponent,
-    MaintenanceComponent,
-    RegisterComponent,
-    LoginComponent,
-    DonateComponent
+    MaintenanceComponent
   ],
   imports: [
     BrowserModule,
@@ -61,8 +54,8 @@ import { MaintenanceComponent } from './pages/maintenance/maintenance.component'
     NgOptimizedImage,
     QRCodeComponent,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: false,
-      registrationStrategy: 'registerWhenStable:30000'
+      enabled: true,
+      registrationStrategy: 'registerWhenStable:3000'
     })
   ],
   providers: [

@@ -33,6 +33,8 @@ export class DashboardComponent implements OnInit {
   currentRequestStatus: string = 'Idle';
   hasActiveRequest = false;
   lastRequestItems: RequestItem[] = [];
+  lastRequestDate: string = '';
+  requestHistory: any[] = [];
   transactions: any[] = [];
 
   // Magic Link & PIN Security State
@@ -421,6 +423,13 @@ export class DashboardComponent implements OnInit {
         this.hasActiveRequest = true;
         this.currentRequestStatus = (localStorage.getItem('ja_relief_request_status') as any) || 'Survivor placed request';
         this.lastRequestItems = JSON.parse(localStorage.getItem('ja_relief_request_items') || '[]');
+        this.lastRequestDate = localStorage.getItem('ja_relief_request_date') || '';
+    }
+    
+    // Load history
+    const savedHistory = localStorage.getItem('ja_relief_request_history');
+    if (savedHistory) {
+        this.requestHistory = JSON.parse(savedHistory);
     }
   }
 
@@ -817,7 +826,21 @@ export class DashboardComponent implements OnInit {
 
     this.impactRequestService.addRequest(newRequest);
     this.lastRequestItems = selectedItems;
+    this.lastRequestDate = new Date().toISOString();
+    
     localStorage.setItem('ja_relief_request_items', JSON.stringify(selectedItems));
+    localStorage.setItem('ja_relief_request_date', this.lastRequestDate);
+
+    // Save to history
+    const historyEntry = {
+      id: newRequest.id,
+      date: this.lastRequestDate,
+      items: selectedItems.map(i => i.name),
+      status: 'Request Made'
+    };
+    this.requestHistory.unshift(historyEntry);
+    if (this.requestHistory.length > 10) this.requestHistory.pop(); // Keep last 10
+    localStorage.setItem('ja_relief_request_history', JSON.stringify(this.requestHistory));
 
     // Production API Integration
     this.authService.submitPantryRequest({

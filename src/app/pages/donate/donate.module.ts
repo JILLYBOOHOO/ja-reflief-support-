@@ -10,7 +10,7 @@ import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 const routes: Routes = [{ path: '', component: DonateComponent }];
 
 @NgModule({
-  declarations: [],
+  declarations: [DonateComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -8,9 +8,13 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class SpeechService {
     private recognition: any;
     private isListeningSource = new BehaviorSubject<boolean>(false);
-    isListening$ = this.isListeningSource.asObservable();
+    public isListening$ = this.isListeningSource.asObservable();
     private isReadingSource = new BehaviorSubject<boolean>(false);
-    isReading$ = this.isReadingSource.asObservable();
+    public isReading$ = this.isReadingSource.asObservable();
+    
+    private voiceModeSource = new BehaviorSubject<'command' | 'dictation' | 'none'>('none');
+    public voiceMode$ = this.voiceModeSource.asObservable();
+    
     private lastProcessedIndex = -1;
 
     constructor(private router: Router, private zone: NgZone) {
@@ -101,13 +105,24 @@ export class SpeechService {
         }
     }
 
-    toggleListening(feedback: string = 'Listening'): void {
+    toggleListening(mode: 'command' | 'dictation' = 'command'): void {
         if (!this.recognition) return;
 
-        if (this.isListeningSource.observed && (this.recognition as any).started) {
-            this.stopListening();
+        const currentMode = this.voiceModeSource.value;
+        const isCurrentlyListening = (this.recognition as any).started;
+
+        if (isCurrentlyListening) {
+            if (currentMode === mode) {
+                // Same mode, stop it
+                this.stopListening();
+            } else {
+                // Different mode, switch it
+                this.stopListening();
+                setTimeout(() => this.startListening(mode), 300);
+            }
         } else {
-            this.startListening(feedback);
+            // Not listening, start it
+            this.startListening(mode);
         }
     }
 
@@ -127,12 +142,15 @@ export class SpeechService {
         this.stopListening();
     }
 
-    private startListening(feedback: string = 'Listening'): void {
+    private startListening(mode: 'command' | 'dictation' = 'command'): void {
         try {
             if ((this.recognition as any).started) return;
-            this.lastProcessedIndex = -1; // Reset to prevent processing old results
+            this.lastProcessedIndex = -1;
+            this.voiceModeSource.next(mode);
             this.recognition.start();
-            if (!this.isFieldInputMode) this.speak(feedback);
+            
+            const greet = mode === 'dictation' ? 'Voice Typing active. Speak to fill fields.' : 'Voice Navigation active.';
+            this.speak(greet);
         } catch (e) {
             console.error('Speech recognition error:', e);
         }
@@ -142,18 +160,18 @@ export class SpeechService {
         if (this.recognition) {
             this.recognition.abort();
         }
-        if (!this.isFieldInputMode) window.speechSynthesis.cancel();
-        if (!this.isFieldInputMode) this.speak('Stopped');
+        this.voiceModeSource.next('none');
+        window.speechSynthesis.cancel();
     }
 
     private handleCommand(command: string): void {
+        if (!command) return;
         const input = command.toLowerCase();
-        console.log('Voice engine identifying command:', input);
+        const mode = this.voiceModeSource.value;
 
-        if (this.isFieldInputMode) {
+        if (mode === 'dictation') {
             this.zone.run(() => {
-                this.fieldResultSource.next(input);
-                this.stopFieldInput();
+                this.insertTextAtCursor(command);
             });
             return;
         }
@@ -238,6 +256,32 @@ export class SpeechService {
                 utterance.onerror = () => this.zone.run(() => this.isReadingSource.next(false));
                 window.speechSynthesis.speak(utterance);
             }
+        }
+    }
+
+    private insertTextAtCursor(text: string): void {
+        const activeElement = document.activeElement as HTMLInputElement | HTMLTextAreaElement;
+        const isInput = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA');
+
+        if (isInput) {
+            const start = activeElement.selectionStart || 0;
+            const end = activeElement.selectionEnd || 0;
+            const val = activeElement.value;
+            
+            // Append with space if needed
+            const prefix = (start > 0 && val[start - 1] !== ' ') ? ' ' : '';
+            const newText = prefix + text + ' ';
+            
+            activeElement.value = val.substring(0, start) + newText + val.substring(end);
+            
+            // Move cursor
+            const newPos = start + newText.length;
+            activeElement.setSelectionRange(newPos, newPos);
+            
+            // Trigger input event for Angular/Other frameworks to detect change
+            activeElement.dispatchEvent(new Event('input', { bubbles: true }));
+        } else {
+            this.speak('Please click on a text box before speaking.');
         }
     }
 }

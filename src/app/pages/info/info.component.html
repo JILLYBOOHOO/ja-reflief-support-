@@ -150,7 +150,7 @@
                         <div class="location-item" *ngFor="let h of hospitals">
                             <strong>{{ h.name }}</strong>
                             <p>{{ h.address }}</p>
-                            <a [href]="h.mapLink" target="_blank" class="map-link">📍 View on Map</a>
+                            <a [href]="h.mapLink" target="_blank" rel="noopener noreferrer" class="map-link">📍 View on Map</a>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                         <div class="location-item" *ngFor="let s of shelters">
                             <strong>{{ s.name }} ({{ s.parish }})</strong>
                             <p>{{ s.address }}</p>
-                            <a [href]="s.mapLink" target="_blank" class="map-link">📍 View on Map</a>
+                            <a [href]="s.mapLink" target="_blank" rel="noopener noreferrer" class="map-link">📍 View on Map</a>
                         </div>
                     </div>
                 </div>

@@ -11,6 +11,7 @@ import { SpeechService } from '../../services/speech.service';
 export class HeaderComponent implements OnInit {
   isDarkMode = false;
   isListening = false;
+  currentVoiceMode: 'command' | 'dictation' | 'none' = 'none';
   get currentUser(): User | null {
     // Zero-Dependency Bridge: Read directly from local storage
     const saved = localStorage.getItem('survivor_user');
@@ -43,8 +44,9 @@ export class HeaderComponent implements OnInit {
       document.body.classList.add('dark-theme');
     }
 
-    this.speechService.isListening$.subscribe(state => {
-      this.isListening = state;
+    this.speechService.voiceMode$.subscribe(mode => {
+      this.currentVoiceMode = mode;
+      this.isListening = (mode === 'dictation');
       this.cdr.detectChanges();
     });
 
@@ -75,7 +77,7 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleVoice(): void {
-    this.speechService.toggleListening('Typing');
+    this.speechService.toggleListening('dictation');
   }
 
   logout(): void {

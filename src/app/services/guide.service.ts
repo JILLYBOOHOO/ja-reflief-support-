@@ -110,12 +110,18 @@ export class GuideService {
       
       case '/dashboard':
         steps = [
-          { element: '.bg-surface-container-lowest.rounded-3xl.p-8', popover: { title: 'Success Alert', description: 'Your registration was successful. This message disappears after a few seconds.' } },
-          { element: '.grid-cols-1.lg\\:grid-cols-12.gap-8', popover: { title: 'Survivor Dashboard', description: 'Welcome to your relief portal. Browse categories on the left and select items you need. The summary card on the right tracks your request.' } },
-          { element: 'aside.lg\\:col-span-3.sticky', popover: { title: 'Item Selection', description: 'Use this sidebar to quickly jump between categories like Food, Water, and Medical Supplies.' } },
-          { element: '#survivor-notes, textarea', popover: { title: 'Special Requirements', description: 'List any specific needs here, like prescribed medications or dietary restrictions.' } },
-          { element: '.impact-btn-group button.bg-primary', popover: { title: 'Submit Request', description: 'Once you have selected all required supplies, click this button to submit your aid request to the command center.' } }
+          { element: 'h1', popover: { title: 'Welcome Back!', description: 'Your personal relief hub is now connected to the national logistics network. From here, you can manage your identification, health data, and aid requests.' } },
+          { element: '#tour-step-1', popover: { title: 'Digital Survivor ID', description: 'This is your official JA Relief identity. Tap the card to flip it and reveal your security details. You can use this for verified payments at relief hubs.' } },
+          { element: '#tour-step-history', popover: { title: 'Transaction History', description: 'Track every relief payment and grant allocation in real-time. Use the refresh icon to sync your latest activity.' } },
+          { element: '#tour-step-medical', popover: { title: 'Emergency Medical Card', description: 'First responders can access this high-contrast card in an emergency. Keep your allergies and medications updated to ensure safe treatment.' } },
+          { element: '#tour-step-3', popover: { title: 'Resilient Pantry Request', description: 'Select the categories of supplies you need most. We categorize by priority to ensure that water and staples reach you first.' } },
+          { element: '#tour-step-4', popover: { title: 'Request Summary & Submission', description: 'Review your selected items here. Once you click "Send Request", our teams in Kingston will begin processing your parcel immediately.' } },
+          { element: '#tour-step-tracker', popover: { title: 'Live Progress Tracking', description: 'Once a request is live, this bar shows its real-time location—from packing in the warehouse to delivery at your door.' } }
         ];
+        // Filter out tracker step if it's not currently visible
+        if (!document.getElementById('tour-step-tracker')) {
+            steps = steps.filter(s => s.element !== '#tour-step-tracker');
+        }
         break;
 
       case '/admin':

@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ja-relief",
+            "outputPath": "dist/ja-relief-prod-v6",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [

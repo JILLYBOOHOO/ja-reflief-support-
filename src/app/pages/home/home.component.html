@@ -8,28 +8,31 @@
     </a>
 </div>
 
-<section class="home">
-    <div class="hero-container">
-        <div class="hero-overlay">
+<section class="m-0 p-0 relative w-full min-h-[100dvh]">
+    <!-- Highly Optimized LCP Image Element -->
+    <img src="/assets/hmpg.webp" alt="Jamaican Relief Background" class="absolute inset-0 w-full h-full object-cover object-center z-0" fetchpriority="high" />
+    
+    <div class="relative z-10 w-full min-h-[100dvh] flex justify-center items-center text-center">
+            <div class="bg-black/90 backdrop-blur-3xl border border-white/20 px-8 py-12 rounded-3xl w-full max-w-[800px] w-[95%] text-white shadow-[0_8px_32px_rgba(0,0,0,0.9)]">
 
-            <p>
+            <p class="text-2xl md:text-3xl leading-relaxed mb-8 font-sans font-extrabold tracking-wide" style="text-shadow: 2px 2px 6px rgba(0,0,0,1), -1px -1px 4px rgba(0,0,0,0.8);">
                 JA RELIEF is a disaster assistance platform helping Jamaicans
                 access food, medication, and emergency support after hurricanes
                 and other natural disasters.
             </p>
             
             <!-- Authenticated View -->
-            <div class="actions-stack" *ngIf="authService.currentUser$ | async as user; else notLoggedIn">
-                <a routerLink="/wifi-access" class="btn btn-7 wifi-primary" aria-label="Get Wi-Fi access voucher">
+            <div class="flex flex-col items-center gap-6" *ngIf="authService.currentUser$ | async as user; else notLoggedIn">
+                <a routerLink="/wifi-access" class="inline-flex items-center justify-center p-2.5 min-h-[55px] w-full max-w-[320px] md:w-[280px] rounded-xl font-bold text-center border-4 border-black border-solid shadow-[6px_6px_0px_#FFFF00] bg-black text-white active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_#000] focus:outline-none transition-all font-serif" aria-label="Get Wi-Fi access voucher">
                     <span>GET WIFI</span>
                 </a>
-                <div class="btn-row">
+                <div class="flex flex-col md:flex-row gap-4 justify-center flex-wrap w-full">
                     <a [routerLink]="user.role === 'admin' ? '/admin' : '/dashboard'" 
-                       class="btn btn-7 dashboard-primary" 
+                       class="inline-flex items-center justify-center p-2.5 min-h-[55px] w-full max-w-[320px] md:w-[280px] rounded-xl font-bold text-center border-4 border-black border-solid shadow-[6px_6px_0px_#000] bg-white text-black active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_#000] focus:outline-none transition-all font-serif" 
                        [attr.aria-label]="user.role === 'admin' ? 'Go to Admin Portal' : 'Request Aid Dashboard'">
                         <span>{{ user.role === 'admin' ? 'Admin Portal' : 'Request Aid' }}</span>
                     </a>
-                    <a routerLink="/information" class="btn btn-7 info-secondary" aria-label="View more information">
+                    <a routerLink="/information" class="inline-flex items-center justify-center p-2.5 min-h-[55px] w-full max-w-[320px] md:w-[280px] rounded-xl font-bold text-center border-4 border-black border-solid shadow-[6px_6px_0px_#009B3A] bg-white text-black active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_#000] focus:outline-none transition-all font-serif" aria-label="View more information">
                         <span>Emergency Information</span>
                     </a>
                 </div>
@@ -37,27 +40,25 @@
 
             <!-- Public View -->
             <ng-template #notLoggedIn>
-                <div class="actions-stack">
-                    <a routerLink="/wifi-access" class="btn btn-7 wifi-primary" aria-label="Get Wi-Fi access voucher">
+                <div class="flex flex-col items-center gap-6">
+                    <a routerLink="/wifi-access" class="inline-flex items-center justify-center p-2.5 min-h-[55px] w-full max-w-[320px] md:w-[280px] rounded-xl font-bold text-center border-4 border-black border-solid shadow-[6px_6px_0px_#FFFF00] bg-black text-white active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_#000] focus:outline-none transition-all font-serif" aria-label="Get Wi-Fi access voucher">
                         <span>GET WIFI</span>
                     </a>
-                    <div class="btn-row">
-                        <a routerLink="/donate" class="btn btn-7 donate-secondary" style="background: #FFFFFF !important; color: #000000 !important; box-shadow: 6px 6px 0px #000000 !important;" aria-label="Donate to disaster relief">
+                    <div class="flex flex-col md:flex-row gap-4 justify-center flex-wrap w-full">
+                        <a routerLink="/donate" class="inline-flex items-center justify-center p-2.5 min-h-[55px] w-full max-w-[320px] md:w-[280px] rounded-xl font-bold text-center border-4 border-black border-solid shadow-[6px_6px_0px_#000000] bg-white text-black active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_#000] focus:outline-none transition-all font-serif" aria-label="Donate to disaster relief">
                             <span class="material-symbols-outlined mr-2">volunteer_activism</span>
                             <span>Donate</span>
                         </a>
-                        <a routerLink="/login" class="btn btn-7 login-secondary" aria-label="Login to your account">
+                        <a routerLink="/login" class="inline-flex items-center justify-center p-2.5 min-h-[55px] w-full max-w-[320px] md:w-[280px] rounded-xl font-bold text-center border-4 border-black border-solid shadow-[6px_6px_0px_#000000] bg-[#FED100] text-black active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_#000] focus:outline-none transition-all font-serif" aria-label="Login to your account">
                             <span>Login</span>
                         </a>
-                        <a routerLink="/login" class="btn btn-7 admin-btn" aria-label="Admin Login">
-                            <span>Admin Login</span>
-                        </a>
+
                     </div>
-                    <div class="btn-row">
-                        <a routerLink="/information" class="btn btn-7 info-secondary" aria-label="View more information">
+                    <div class="flex flex-col md:flex-row gap-4 justify-center flex-wrap w-full">
+                        <a routerLink="/information" class="inline-flex items-center justify-center p-2.5 min-h-[55px] w-full max-w-[320px] md:w-[280px] rounded-xl font-bold text-center border-4 border-black border-solid shadow-[6px_6px_0px_#009B3A] bg-white text-black active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_#000] focus:outline-none transition-all font-serif" aria-label="View more information">
                             <span>Emergency Information</span>
                         </a>
-                        <a routerLink="/contact-us" class="btn btn-7 community-btn"
+                        <a routerLink="/contact-us" class="inline-flex items-center justify-center p-2.5 h-[70px] w-full max-w-[320px] md:w-[380px] rounded-xl font-bold text-center border-4 border-black border-solid shadow-[6px_6px_0px_#FED100] bg-white text-black active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_#000] focus:outline-none transition-all font-serif px-5 leading-tight"
                             aria-label="Learn how JA Relief helps communities">
                             <span>How JA Relief Helps Communities</span>
                         </a>
@@ -65,22 +66,22 @@
                 </div>
             </ng-template>
 
-            <div class="features-grid" role="list">
-                <div class="feature-item" role="listitem" tabindex="0" aria-label="Feature: Find WiFi hotspots">
-                    <div class="feature-icon" aria-hidden="true">📶</div>
-                    <div class="feature-title">Find WiFi</div>
-                    <div class="feature-desc">Locate WiFi hotspots</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mt-10" role="list">
+                <div class="bg-white/10 backdrop-blur-md border border-white/15 p-6 rounded-2xl flex flex-col items-center" role="listitem" tabindex="0" aria-label="Feature: Find WiFi hotspots">
+                    <div class="text-[2.2rem] mb-3" aria-hidden="true">📶</div>
+                    <div class="text-[1.2rem] font-bold text-white mb-1">Find WiFi</div>
+                    <div class="text-[0.9rem] text-white/80 text-center">Locate WiFi hotspots</div>
                 </div>
-                <div class="feature-item" role="listitem" tabindex="0"
+                <div class="bg-white/10 backdrop-blur-md border border-white/15 p-6 rounded-2xl flex flex-col items-center" role="listitem" tabindex="0"
                     aria-label="Feature: Request Aid for food or medicine">
-                    <div class="feature-icon" aria-hidden="true">🆘</div>
-                    <div class="feature-title">Request Aid</div>
-                    <div class="feature-desc">Ask for food or medicine</div>
+                    <div class="text-[2.2rem] mb-3" aria-hidden="true">🆘</div>
+                    <div class="text-[1.2rem] font-bold text-white mb-1">Request Aid</div>
+                    <div class="text-[0.9rem] text-white/80 text-center">Ask for food or medicine</div>
                 </div>
-                <div class="feature-item" role="listitem" tabindex="0" aria-label="Feature: Donate Help to families">
-                    <div class="feature-icon" aria-hidden="true">🤝</div>
-                    <div class="feature-title">Donate Help</div>
-                    <div class="feature-desc">Support families</div>
+                <div class="bg-white/10 backdrop-blur-md border border-white/15 p-6 rounded-2xl flex flex-col items-center" role="listitem" tabindex="0" aria-label="Feature: Donate Help to families">
+                    <div class="text-[2.2rem] mb-3" aria-hidden="true">🤝</div>
+                    <div class="text-[1.2rem] font-bold text-white mb-1">Donate Help</div>
+                    <div class="text-[0.9rem] text-white/80 text-center">Support families</div>
                 </div>
             </div>
         </div>
