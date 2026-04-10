@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard.component';
-import { QRCodeModule } from 'angularx-qrcode';
+import { QRCodeComponent } from 'angularx-qrcode';
 import { SharedModule } from '../../shared/shared.module';
 
 const routes: Routes = [{ path: '', component: DashboardComponent }];
@@ -14,7 +14,7 @@ const routes: Routes = [{ path: '', component: DashboardComponent }];
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    QRCodeModule, 
+    QRCodeComponent, 
     SharedModule,
     RouterModule.forChild(routes)
   ]
